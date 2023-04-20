@@ -1,46 +1,86 @@
 <template>
-  <div class="col-md-4 offset-md-4">
-    <div class="form-container">
-      <div class="form-icon"><i class="fa fa-user"></i></div>
-      <h3 class="title">Регистрация</h3>
-      <form class="form-horizontal">
-        <div class="form-group">
-          <hr>
-          <br>
-          <label for="email"><b>Email: </b></label>{{ ' ' }}
-          <input class="form-control" name="email" type="text" v-model="email"/>
-          <br>
-          <br>
-          <label for="psw"><b>Пароль: </b></label> {{ ' ' }}
-          <input class="form-control" name="psw" type="password" v-model="psw"/>
-          <br>
-          <br>
-          <label for="psw-repeat"><b>Повторите пароль: </b></label> {{ ' ' }}
-          <input class="form-control" name="psw_repeat" type="password" v-model="psw_repeat"/>
-          <br>
-          <br>
-          <br>
-          <button type="submit" class="btn btn-default">Регистрация</button>
+    <br>
+    <br>
+    <div class="col-md-4 offset-md-4">
+        <div class="form-container">
+            <div class="form-icon"><i class="fa fa-user"></i></div>
+            <h3 class="title">Регистрация</h3>
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <hr>
+                    <br>
+                    <p>{{ msg }}</p>
+                    <br>
+                    <label for="email"><b>Email: </b></label>{{ ' ' }}
+                    <input class="form-control" @change="get_email" name="email" type="text" v-model="email"/>
+                    <br>
+                    <br>
+                    <label for="psw"><b>Пароль: </b></label> {{ ' ' }}
+                    <input class="form-control" @change="get_psw" name="psw" type="password" v-model="psw"/>
+                    <br>
+                    <br>
+                    <label for="psw-repeat"><b>Повторите пароль: </b></label> {{ ' ' }}
+                    <input class="form-control" @change="get_psw_rep" name="psw_repeat" type="password" v-model="psw_repeat"/>
+                    <br>
+                    <br>
+                    <br>
+                    <button type="submit" v-on:click.prevent="sub" class="btn btn-default">Регистрация</button>
+                </div>
+                <br>
+                <div class="container signin">
+                    <p>У вас уже есть аккаунт?<a href="/menu/login/"> Войти</a>.</p>
+                </div>
+            </form>
         </div>
-        <br>
-        <div class="container signin">
-          <p>У вас уже есть аккаунт?<a href="/menu/login/"> Войти</a>.</p>
-        </div>
-      </form>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: "AuthPage",
-  data() {
-    return {
-      email: '',
-      psw: '',
-      psw_repeat: ''
+    name: "AuthPage",
+    data() {
+        return {
+            msg: '',
+            email: '',
+            psw: '',
+            psw_repeat: '',
+            date: {}
+        }
+    },
+    methods: {
+        async get_email(event) {
+            event.stopImmediatePropagation();
+            const text = event.target.value;
+            this.date['email'] = text
+            console.log(this.date)
+        },
+        async get_psw(event) {
+            event.stopImmediatePropagation();
+            const text = event.target.value;
+            this.date['psw'] = text
+            console.log(this.date)
+        },
+        async get_psw_rep(event) {
+            event.stopImmediatePropagation();
+            const text = event.target.value;
+            this.date['psw_repeat'] = text
+            console.log(this.date)
+        },
+        sub: function(){
+            if (!this.psw_repeat.length) {
+                    this.msg = 'Введите повторно пароль'
+                }
+                if (!this.psw.length) {
+                    this.msg = "Введите пароль"
+                }
+                if (!this.email.length) {
+                    this.msg = 'Введите email'
+                }
+                if (!(this.psw === this.psw_repeat)) {
+                    this.msg = 'Введенные пароли не совпадают'
+                }
+        }
     }
-  },
 }
 </script>
 
@@ -123,7 +163,7 @@ export default {
 
 .form-container .form-horizontal .btn:hover,
 .form-container .form-horizontal .btn:focus{
- color: #fff;
+ color: #000000;
  letter-spacing: 3px;
  box-shadow: none;
  outline: none;
