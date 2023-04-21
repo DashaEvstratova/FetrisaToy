@@ -4,7 +4,7 @@
     <div class="col-md-4 offset-md-4">
         <div class="form-container">
             <div class="form-icon"><i class="fa fa-user"></i></div>
-            <h3 class="title">Регистрация</h3>
+            <h3 class="title">Вход</h3>
             <form class="form-horizontal">
                 <div class="form-group">
                     <hr>
@@ -19,16 +19,11 @@
                     <input class="form-control" @change="get_psw" name="psw" type="password" v-model="psw"/>
                     <br>
                     <br>
-                    <label for="psw-repeat"><b>Повторите пароль: </b></label> {{ ' ' }}
-                    <input class="form-control" @change="get_psw_rep" name="psw_repeat" type="password" v-model="psw_repeat"/>
-                    <br>
-                    <br>
-                    <br>
-                    <button type="submit" v-on:click.prevent="sub" class="btn btn-default">Регистрация</button>
+                    <button type="submit" v-on:click.prevent="sub" class="btn btn-default">Войти</button>
                 </div>
                 <br>
                 <div class="container signin">
-                    <p>У вас уже есть аккаунт?<router-link to="/login">Войти</router-link>
+                    <p>У вас нет аккаунта?<router-link to="/auth">Зарегестрироваться</router-link>
   <router-view/>.</p>
                 </div>
             </form>
@@ -38,13 +33,12 @@
 
 <script>
 export default {
-    name: "AuthPage",
+    name: "LoginPage",
     data() {
         return {
             msg: '',
             email: '',
             psw: '',
-            psw_repeat: '',
             date: {}
         }
     },
@@ -61,24 +55,12 @@ export default {
             this.date['psw'] = text
             console.log(this.date)
         },
-        async get_psw_rep(event) {
-            event.stopImmediatePropagation();
-            const text = event.target.value;
-            this.date['psw_repeat'] = text
-            console.log(this.date)
-        },
         sub: function(){
-            if (!this.psw_repeat.length) {
-                    this.msg = 'Введите повторно пароль'
-                }
                 if (!this.psw.length) {
                     this.msg = "Введите пароль"
                 }
                 if (!this.email.length) {
                     this.msg = 'Введите email'
-                }
-                if (!(this.psw === this.psw_repeat)) {
-                    this.msg = 'Введенные пароли не совпадают'
                 }
         }
     }
