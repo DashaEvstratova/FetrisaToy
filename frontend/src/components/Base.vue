@@ -1,5 +1,5 @@
 <template>
-      <div>
+    <div>
         <b-card no-body>
             <b-tabs card>
                 <b-tab title="Tab 1" active>
@@ -12,22 +12,18 @@
         </b-card>
     </div>
 </template>
-<script>
 
+<script>
 export default {
-    name: 'App',
-    components: {
+  name: "main_frame",
+  data() {
+    return {
     }
+  },
+    compatConfig:{MODE: 3}
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+
 </style>
