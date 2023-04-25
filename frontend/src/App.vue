@@ -1,13 +1,45 @@
+<script setup>
+  import { MDBInput, MDBBtn, MDBIcon } from 'mdb-vue-ui-kit';
+  import { ref } from 'vue';
+
+  const search1 = ref('');
+</script>
+
 <template>
-    <h1 class="funny-title section-title" >Fetrisa Toy</h1>
+    <h1 class="funny-title section-title">Fetrisa Toy</h1>
     <div class="container">
-        <table  id="maket">
+        <table id="maket">
             <tr>
-                <td id="leftcol"><SidebarMenu/></td>
-                <td id="rightcol"><b-icon class="h1 mb-2" icon="search" aria-hidden="true"></b-icon></td>
-                <td id="rightcol"><b-icon class="h1 mb-2" icon="person-fill" aria-hidden="true"></b-icon></td>
-                <td id="rightcol"><b-icon class="h1 mb-2" icon="basket3-fill" aria-hidden="true"></b-icon></td>
-                <td id="rightcol"><b-icon class="h1 mb-2" icon="suit-heart-fill" aria-hidden="true"></b-icon></td>
+                <td id="rightcol">
+                    <template>
+                        <MDBInput
+                            v-model="search1"
+                            inputGroup
+                            :formOutline="false"
+                            wrapperClass="mb-3"
+                            placeholder="Search"
+                            aria-label="Search"
+                            aria-describedby="button-addon2"
+                        >
+                            <MDBBtn color="primary">
+                                <MDBIcon icon="search"/>
+                            </MDBBtn>
+                        </MDBInput>
+                    </template>
+                </td>
+                <td id="rightcol">
+                    <ProfilBar/>
+                </td>
+                <td id="rightcol">
+                    <button type="button" class="btn btn-primary btn-circle">
+                    <b-icon class="h1 mb-2" icon="basket3-fill" aria-hidden="true"></b-icon>
+                </button>
+                </td>
+                <td id="rightcol">
+                    <button type="button" class="btn btn-primary btn-circle">
+                    <b-icon class="h1 mb-2" icon="suit-heart-fill" aria-hidden="true"></b-icon>
+                    </button>
+                </td>
             </tr>
         </table>
         <br>
@@ -16,20 +48,27 @@
     </div>
       <router-view/>
 </template>
+
 <script>
 import TabContent from "./components/Base.vue"
-import SidebarMenu from "@/components/Sidebar.vue";
+import ProfilBar from "@/components/ProfilBar.vue";
 export default {
     name: 'App',
     components: {
-        SidebarMenu,
         TabContent,
-
+        ProfilBar,
     }
 }
 </script>
 
 <style>
+
+.btn-circle {
+    height: 40px;
+    text-align: center;
+    white-space: normal; /* восстанавливаем свойству значение по умолчанию */
+}
+
 #maket {
     width: 100%; /* Ширина всей таблицы */
    }

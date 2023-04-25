@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router"
 import App from './App.vue'
-import Vue, { createApp } from '@vue/compat';
+import Vue, { createApp} from '@vue/compat';
 import AuthPage from "@/pages/AuthPage";
 import LoginPage from "@/pages/LoginPage.vue";
 import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
@@ -25,7 +25,7 @@ const router = createRouter({
     routes : routeInfos
 })
 Vue.use(BootstrapVue);
-Vue.use(BootstrapVueIcons)
+Vue.use(BootstrapVueIcons);
 const app = createApp(App)
 
 app.use(router).mount('#app')

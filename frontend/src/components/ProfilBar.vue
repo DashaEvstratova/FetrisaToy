@@ -2,13 +2,12 @@
   <div>
     <b-dropdown variant="primary">
       <template #button-content>
-        <b-icon icon="three-dots" aria-hidden="true"></b-icon>
+        <b-icon icon="person-fill" aria-hidden="true"></b-icon>
       </template>
       <b-dropdown-item-button>
-         <b-icon icon="lock-fill" aria-hidden="true"></b-icon>
-         Locked <span class="sr-only">(Click to unlock)</span>
+         <b-icon icon="brush-fill" aria-hidden="true"></b-icon>
+         Фильтр <span class="sr-only">(Click to unlock)</span>
       </b-dropdown-item-button>
-      <b-dropdown-divider></b-dropdown-divider>
       <b-dropdown-group header="Choose options" class="small">
         <b-dropdown-item-button>
            <b-icon icon="blank" aria-hidden="true"></b-icon>
@@ -37,7 +36,7 @@
 
 <script>
 export default {
-    name: "SidebarMenu",
+    name: "ProfilBar",
     data() {
         return {
             active: 'home',
