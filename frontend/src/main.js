@@ -3,7 +3,7 @@ import App from './App.vue'
 import Vue, { createApp } from '@vue/compat';
 import AuthPage from "@/pages/AuthPage";
 import LoginPage from "@/pages/LoginPage.vue";
-import BootstrapVue from "bootstrap-vue";
+import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
@@ -25,6 +25,7 @@ const router = createRouter({
     routes : routeInfos
 })
 Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons)
 const app = createApp(App)
 
 app.use(router).mount('#app')
