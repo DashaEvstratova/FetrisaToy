@@ -4,8 +4,6 @@ from django.contrib.auth.models import UserManager as DjangoUserManager
 
 from django.db import models
 
-from main_store.enums import Category
-
 
 class BaseModel(models.Model):
     class Meta:
@@ -64,7 +62,7 @@ class Items(models.Model):
     size = models.FloatField()
     price = models.IntegerField()
     description = models.TextField(max_length=100000)
-    category = models.CharField(max_length=25, choices=Category.choices, default="Единичная")
+    category = models.CharField(max_length=25)
 
 
 class OrederData(models.Model):
@@ -79,4 +77,4 @@ class Color(models.Model):
 
 class Pictures(models.Model):
     picture = models.CharField(max_length=255)
-    item = models.ForeignKey(Items, on_delete=models.CASCADE)
+    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='pictures')

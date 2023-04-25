@@ -14,9 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from main_store.views import MyTokenObtainPairView
+from rest_framework.routers import SimpleRouter
+from main_store.views import ItemViewSet, PicturesSet
+
+
+router = SimpleRouter()
+router.register(r'items', ItemViewSet, basename='items')
+router.register(r'picturer', PicturesSet, basename='picturer')
 
 
 urlpatterns = [
-    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-]
+] + router.urls

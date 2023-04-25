@@ -1,21 +1,24 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import serializers
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
+from main_store.models import Items, Pictures
 
-        # Add custom claims
-        token['username'] = user.username
-        token['email'] = user.email
 
-        return token
+class PicturesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pictures
+        fields = (
+            "picture",
+            "item",
+        )
 
-    def validate(self, attrs):
-        data = super().validate(attrs)
-
-        # Add custom data
-        data['username'] = self.user.username
-        data['email'] = self.user.email
-
-        return data
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Items
+        fields = (
+            "name",
+            "number",
+            "size",
+            "price",
+            "description",
+            "category",
+        )
