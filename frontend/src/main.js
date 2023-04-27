@@ -3,6 +3,7 @@ import App from './App.vue'
 import Vue, { createApp} from '@vue/compat';
 import AuthPage from "@/pages/AuthPage";
 import LoginPage from "@/pages/LoginPage.vue";
+import MainPage from "@/pages/MainPage.vue";
 import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
@@ -17,6 +18,10 @@ const routeInfos = [
     {
         path:"/login",
         component: LoginPage
+    },
+    {
+        path:"/menu",
+        component: MainPage
     }
 ]
 
