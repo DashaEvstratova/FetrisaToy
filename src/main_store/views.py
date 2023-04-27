@@ -7,5 +7,10 @@ class ItemViewSet(ModelViewSet):
     def get_serializer_class(self):
         return PicturesSerializer
     def get_queryset(self):
-        return Pictures.objects.all() \
-            .prefetch_related(Prefetch("item", Items.objects.all().filter(category='Игрушки')))
+        return Pictures.objects.filter(item__isnull=False, item__category='Игрушки').prefetch_related('item')
+
+class PatternViewSet(ModelViewSet):
+    def get_serializer_class(self):
+        return PicturesSerializer
+    def get_queryset(self):
+        return Pictures.objects.filter(item__isnull=False, item__category='Выкройка').prefetch_related('item')
