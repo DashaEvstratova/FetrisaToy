@@ -15,12 +15,11 @@ Including another URLconf
 """
 from django.urls import path
 from rest_framework.routers import SimpleRouter
-from main_store.views import ItemViewSet, PicturesSet
+from main_store.views import ItemViewSet
 
 
 router = SimpleRouter()
 router.register(r'items', ItemViewSet, basename='items')
-router.register(r'picturer', PicturesSet, basename='picturer')
 
 
 urlpatterns = [

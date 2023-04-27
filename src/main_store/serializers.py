@@ -3,14 +3,6 @@ from rest_framework import serializers
 from main_store.models import Items, Pictures
 
 
-class PicturesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Pictures
-        fields = (
-            "picture",
-            "item",
-        )
-
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Items
@@ -21,4 +13,14 @@ class ItemSerializer(serializers.ModelSerializer):
             "price",
             "description",
             "category",
+        )
+
+
+class PicturesSerializer(serializers.ModelSerializer):
+    item = ItemSerializer(read_only=True)
+    class Meta:
+        model = Pictures
+        fields = (
+            "picture",
+            "item",
         )
