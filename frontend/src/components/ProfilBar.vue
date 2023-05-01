@@ -6,7 +6,7 @@
       </template>
         <div v-if="user">
          <b-icon icon="person-fill" aria-hidden="true"></b-icon>
-           {{user.email}}
+           {{user}}
             <br>
       <b-dropdown-item-button>Профиль</b-dropdown-item-button>
       <b-dropdown-divider></b-dropdown-divider>

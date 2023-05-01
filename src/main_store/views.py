@@ -1,12 +1,12 @@
-from main_store.serializers import ItemSerializer, PicturesSerializer
-from main_store.models import Items, Pictures
+from main_store.serializers import ItemSerializer, PicturesSerializer, UserSerializer
+from main_store.models import Items, Pictures, User
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from rest_framework import generics
 from djoser.serializers import UserCreateSerializer
 
 
@@ -48,3 +48,7 @@ class JWTTokenObtainPairView(TokenObtainPairView):
     serializer_class = TokenObtainPairSerializer
     token_obtain_pair = TokenObtainPairSerializer
     token_refresh = None
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

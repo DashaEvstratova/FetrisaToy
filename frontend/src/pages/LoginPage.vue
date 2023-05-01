@@ -1,5 +1,6 @@
 <script>
 import axios from 'axios';
+import jwtDecode from "jwt-decode";
 export default {
     name: "LoginPage",
     data() {
@@ -15,8 +16,10 @@ export default {
                 email: this.email,
                 password: this.password,
             }).then(response => {
+                const token = response.data.access;
+                const user = jwtDecode(token)
                 // сохраняем данные пользователя в localStorage
-                localStorage.setItem('user', JSON.stringify(response.data));
+                localStorage.setItem('user', JSON.stringify(user));
                 this.$router.push('/menu');
             }).catch(error => {
                 this.error = error.response.data;

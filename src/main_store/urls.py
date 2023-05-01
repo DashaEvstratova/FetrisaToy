@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 from rest_framework.routers import SimpleRouter
-from main_store.views import ItemViewSet, PatternViewSet, RegistrationView, JWTTokenObtainPairView
+from main_store.views import ItemViewSet, PatternViewSet, RegistrationView, JWTTokenObtainPairView, UserList
 
 
 router = SimpleRouter()
@@ -26,4 +26,5 @@ urlpatterns = [
     path("auth/register/", RegistrationView.as_view(), name="register"),
     path("auth/token/", JWTTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("auth/token/refresh/", JWTTokenObtainPairView.as_view(), name="token_refresh"),
+    path("users/", UserList.as_view(), name="user_list")
 ] + router.urls
