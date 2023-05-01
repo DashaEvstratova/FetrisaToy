@@ -1,3 +1,29 @@
+<script>
+import axios from 'axios';
+export default {
+    name: "AuthPage",
+    data() {
+        return {
+            email: '',
+            password: '',
+            error: null
+        }
+    },
+    methods: {
+        async register() {
+            try {
+                await axios.post('http://localhost:8000/auth/register/', {
+                    email: this.email,
+                    password: this.password,
+                });
+                this.$router.push('/menu');
+            } catch (error) {
+                this.error = error.response.data;
+            }
+        },
+    }
+};
+</script>
 <template>
     <br>
     <br>
@@ -11,10 +37,11 @@
                     <br>
                     <label for="email"><b>Email: </b></label>{{ ' ' }}
                     <input class="form-control" type="email" v-model="email" required/>
-                    <br>
+                    <p v-if="error" class="error-message">{{ error.email }}</p>
                     <br>
                     <label for="psw"><b>Пароль: </b></label> {{ ' ' }}
                     <input class="form-control" type="password" v-model="password" required autocomplete="new-password"/>
+                    <p v-if="error" class="error-message">{{ error.password}}</p>
                     <br>
                     <br>
                     <br>
@@ -30,31 +57,6 @@
     </div>
 </template>
 
-<script>
-import axios from 'axios';
-export default {
-    name: "AuthPage",
-    data() {
-        return {
-            email: '',
-            password: ''
-        }
-    },
-    methods: {
-        register() {
-            axios.post('http://localhost:8000/auth/register/', {
-                email: this.email,
-                password: this.password,
-            }).then(response => {
-                console.log(response.data);
-                this.$router.push('/menu');
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-    }
-};
-</script>
 
 <style scoped>
 .form-container{

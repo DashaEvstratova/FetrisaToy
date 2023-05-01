@@ -1,3 +1,29 @@
+<script>
+import axios from 'axios';
+export default {
+    name: "LoginPage",
+    data() {
+        return {
+            email: '',
+            password: '',
+            error: null
+        }
+    },
+    methods: {
+        async login() {
+            try {
+            await axios.post('http://localhost:8000/auth/token/', {
+                email: this.email,
+                password: this.password,
+            });
+            this.$router.push('/menu');
+            } catch (error) {
+                this.error = error.response.data;
+            }
+        },
+    }
+}
+</script>
 <template>
     <br>
     <br>
@@ -11,10 +37,12 @@
                     <br>
                     <label for="email"><b>Email: </b></label>{{ ' ' }}
                     <input class="form-control" type="email" v-model="email" required/>
+                    <p v-if="error" class="error-message">{{ error.email }}</p>
                     <br>
                     <br>
                     <label for="psw"><b>Пароль: </b></label> {{ ' ' }}
                     <input class="form-control" type="password" v-model="password" required autocomplete="new-password"/>
+                    <p v-if="error" class="error-message">{{ error.password}}</p>
                     <br>
                     <br>
                     <button type="submit" @click.prevent="login" class="btn btn-default">Войти</button>
@@ -28,35 +56,6 @@
         </div>
     </div>
 </template>
-
-<script>
-import axios from 'axios';
-import jwtDecode from 'jwt-decode';
-export default {
-    name: "LoginPage",
-    data() {
-        return {
-            email: '',
-            password: '',
-        }
-    },
-    methods: {
-        login() {
-            axios.post('http://localhost:8000/auth/token/', {
-                email: this.email,
-                password: this.password,
-            }).then(response => {
-                const token = response.data.access;
-                const user = jwtDecode(token);
-                console.log(user);
-                this.$router.push('/menu');
-            }).catch(error => {
-                console.log(error);
-            });
-        },
-    }
-}
-</script>
 
 <style scoped>
 .form-container{
