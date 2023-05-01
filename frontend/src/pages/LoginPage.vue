@@ -9,17 +9,15 @@
                 <div class="form-group">
                     <hr>
                     <br>
-                    <p>{{ msg }}</p>
-                    <br>
                     <label for="email"><b>Email: </b></label>{{ ' ' }}
-                    <input class="form-control" @change="get_email" name="email" type="text" v-model="email"/>
+                    <input class="form-control" type="email" v-model="email" required/>
                     <br>
                     <br>
                     <label for="psw"><b>Пароль: </b></label> {{ ' ' }}
-                    <input class="form-control" @change="get_psw" name="psw" type="password" v-model="psw"/>
+                    <input class="form-control" type="password" v-model="password" required autocomplete="new-password"/>
                     <br>
                     <br>
-                    <button type="submit" v-on:click.prevent="sub" class="btn btn-default">Войти</button>
+                    <button type="submit" @click.prevent="login" class="btn btn-default">Войти</button>
                 </div>
                 <br>
                 <div class="container signin">
@@ -32,37 +30,30 @@
 </template>
 
 <script>
+import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 export default {
     name: "LoginPage",
     data() {
         return {
-            msg: '',
             email: '',
-            psw: '',
-            date: {}
+            password: '',
         }
     },
     methods: {
-        async get_email(event) {
-            event.stopImmediatePropagation();
-            const text = event.target.value;
-            this.date['email'] = text
-            console.log(this.date)
+        login() {
+            axios.post('http://localhost:8000/auth/token/', {
+                email: this.email,
+                password: this.password,
+            }).then(response => {
+                const token = response.data.access;
+                const user = jwtDecode(token);
+                console.log(user);
+                this.$router.push('/menu');
+            }).catch(error => {
+                console.log(error);
+            });
         },
-        async get_psw(event) {
-            event.stopImmediatePropagation();
-            const text = event.target.value;
-            this.date['psw'] = text
-            console.log(this.date)
-        },
-        sub: function(){
-                if (!this.psw.length) {
-                    this.msg = "Введите пароль"
-                }
-                if (!this.email.length) {
-                    this.msg = 'Введите email'
-                }
-        }
     }
 }
 </script>

@@ -9,22 +9,16 @@
                 <div class="form-group">
                     <hr>
                     <br>
-                    <p>{{ msg }}</p>
-                    <br>
                     <label for="email"><b>Email: </b></label>{{ ' ' }}
-                    <input class="form-control" @change="get_email" name="email" type="text" v-model="email"/>
+                    <input class="form-control" type="email" v-model="email" required/>
                     <br>
                     <br>
                     <label for="psw"><b>Пароль: </b></label> {{ ' ' }}
-                    <input class="form-control" @change="get_psw" name="psw" type="password" v-model="psw"/>
-                    <br>
-                    <br>
-                    <label for="psw-repeat"><b>Повторите пароль: </b></label> {{ ' ' }}
-                    <input class="form-control" @change="get_psw_rep" name="psw_repeat" type="password" v-model="psw_repeat"/>
+                    <input class="form-control" type="password" v-model="password" required autocomplete="new-password"/>
                     <br>
                     <br>
                     <br>
-                    <button type="submit" v-on:click.prevent="sub" class="btn btn-default">Регистрация</button>
+                    <button type="submit" class="btn btn-default" @click.prevent="register">Регистрация</button>
                 </div>
                 <br>
                 <div class="container signin">
@@ -37,52 +31,29 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     name: "AuthPage",
     data() {
         return {
-            msg: '',
             email: '',
-            psw: '',
-            psw_repeat: '',
-            date: {}
+            password: ''
         }
     },
     methods: {
-        async get_email(event) {
-            event.stopImmediatePropagation();
-            const text = event.target.value;
-            this.date['email'] = text
-            console.log(this.date)
+        register() {
+            axios.post('http://localhost:8000/auth/register/', {
+                email: this.email,
+                password: this.password,
+            }).then(response => {
+                console.log(response.data);
+                this.$router.push('/menu');
+            }).catch(error => {
+                console.log(error);
+            });
         },
-        async get_psw(event) {
-            event.stopImmediatePropagation();
-            const text = event.target.value;
-            this.date['psw'] = text
-            console.log(this.date)
-        },
-        async get_psw_rep(event) {
-            event.stopImmediatePropagation();
-            const text = event.target.value;
-            this.date['psw_repeat'] = text
-            console.log(this.date)
-        },
-        sub: function(){
-            if (!this.psw_repeat.length) {
-                    this.msg = 'Введите повторно пароль'
-                }
-                if (!this.psw.length) {
-                    this.msg = "Введите пароль"
-                }
-                if (!this.email.length) {
-                    this.msg = 'Введите email'
-                }
-                if (!(this.psw === this.psw_repeat)) {
-                    this.msg = 'Введенные пароли не совпадают'
-                }
-        }
     }
-}
+};
 </script>
 
 <style scoped>
