@@ -18,6 +18,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
 class PicturesSerializer(serializers.ModelSerializer):
     item = ItemSerializer(read_only=True)
+
     class Meta:
         model = Pictures
         fields = (

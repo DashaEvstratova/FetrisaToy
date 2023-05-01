@@ -77,4 +77,4 @@ class Color(models.Model):
 
 class Pictures(models.Model):
     picture = models.CharField(max_length=255)
-    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name='pictures')
+    item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name="pictures")
