@@ -11,16 +11,17 @@ export default {
     },
     methods: {
         async login() {
-            try {
             await axios.post('http://localhost:8000/auth/token/', {
                 email: this.email,
                 password: this.password,
-            });
-            this.$router.push('/menu');
-            } catch (error) {
+            }).then(response => {
+                // сохраняем данные пользователя в localStorage
+                localStorage.setItem('user', JSON.stringify(response.data));
+                this.$router.push('/menu');
+            }).catch(error => {
                 this.error = error.response.data;
-            }
-        },
+            });
+        }
     }
 }
 </script>

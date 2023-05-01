@@ -11,15 +11,16 @@ export default {
     },
     methods: {
         async register() {
-            try {
-                await axios.post('http://localhost:8000/auth/register/', {
-                    email: this.email,
-                    password: this.password,
-                });
+            await axios.post('http://localhost:8000/auth/register/', {
+                email: this.email,
+                password: this.password,
+            }).then(response => {
+                // сохраняем данные пользователя в localStorage
+                localStorage.setItem('user', JSON.stringify(response.data));
                 this.$router.push('/menu');
-            } catch (error) {
+            }).catch(error => {
                 this.error = error.response.data;
-            }
+            });
         },
     }
 };

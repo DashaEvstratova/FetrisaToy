@@ -1,8 +1,26 @@
 <script setup>
   import { MDBInput, MDBBtn, MDBIcon } from 'mdb-vue-ui-kit';
   import { ref } from 'vue';
-
   const search1 = ref('');
+</script>
+
+<script>
+  import TabContent from "@/components/Base.vue"
+import ProfilBar from "@/components/ProfilBar.vue";
+
+  export default {
+  name: "MainPage",
+  components: {
+    TabContent,
+    ProfilBar,
+  },
+  data() {
+    return {
+      user: JSON.parse(localStorage.getItem('user')),
+    };
+  },
+};
+
 </script>
 
 <template>
@@ -28,7 +46,7 @@
                     </template>
                 </td>
                 <td id="rightcol">
-                    <ProfilBar/>
+                    <ProfilBar :user="user"/>
                 </td>
                 <td id="rightcol">
                     <button type="button" class="btn btn-primary btn-circle">
@@ -48,17 +66,6 @@
     </div>
 </template>
 
-<script>
-import TabContent from "@/components/Base.vue"
-import ProfilBar from "@/components/ProfilBar.vue";
-export default {
-  name: "MainPage",
-    components: {
-        TabContent,
-        ProfilBar,
-    },
-}
-</script>
 
 <style scoped>
 .btn-circle {
