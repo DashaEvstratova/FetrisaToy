@@ -8,6 +8,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
 from djoser.serializers import UserCreateSerializer
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 
 
 class ItemViewSet(ModelViewSet):
@@ -49,6 +51,13 @@ class JWTTokenObtainPairView(TokenObtainPairView):
     token_obtain_pair = TokenObtainPairSerializer
     token_refresh = None
 
+
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class UserDetailView(RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)

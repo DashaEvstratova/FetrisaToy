@@ -1,34 +1,46 @@
 <script setup>
-  import { MDBInput, MDBBtn, MDBIcon } from 'mdb-vue-ui-kit';
-  import { ref } from 'vue';
-  const search1 = ref('');
+import {MDBInput, MDBBtn, MDBIcon} from 'mdb-vue-ui-kit';
+import {ref} from 'vue';
+
+const search1 = ref('');
 </script>
 
 <script>
-  import TabContent from "@/components/Base.vue"
+import TabContent from "@/components/Base.vue"
 import ProfilBar from "@/components/ProfilBar.vue";
-  export default {
-      name: "MainPage",
-      components: {
-          TabContent,
-          ProfilBar,
-      },
-      data() {
-          return {
-              user: this.getUserById(JSON.parse(localStorage.getItem('user')).id),
-          };
-      },
-      methods: {
-          async getUserById(id) {
-              const response = await fetch(`http://127.0.0.1:8000/users/`);
-              const users = await response.json();
 
-              const user = users.find((user) => user.id === id);
-              console.log(user)
-              return user;
-          }
-      }
-  }
+export default {
+    name: "MainPage",
+    components: {
+        TabContent,
+        ProfilBar,
+    },
+    data() {
+        return {
+            user: null,
+        };
+    },
+    mounted() {
+        if (JSON.parse(localStorage.getItem('user'))) {
+            const userId = JSON.parse(localStorage.getItem('user')).user_id;
+            this.getUserById(userId)
+                .then(user => {
+                    this.user = user;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    },
+    methods: {
+        async getUserById(id) {
+            const response = await fetch(`http://127.0.0.1:8000/users/`);
+            const users = await response.json();
+            const user = users.find(user => user.id === id);
+            return user;
+        },
+    },
+}
 
 </script>
 
