@@ -1,6 +1,7 @@
 <script setup>
 import {MDBInput, MDBBtn, MDBIcon} from 'mdb-vue-ui-kit';
 import {ref} from 'vue';
+import FooterMain from "@/components/FooterMain.vue";
 
 const search1 = ref('');
 </script>
@@ -85,6 +86,7 @@ export default {
         <br>
         <TabContent/>
     </div>
+    <FooterMain/>
 </template>
 
 
