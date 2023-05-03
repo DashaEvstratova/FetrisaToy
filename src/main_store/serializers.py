@@ -13,6 +13,7 @@ class ItemSerializer(serializers.ModelSerializer):
             "price",
             "description",
             "category",
+            "id"
         )
 
 

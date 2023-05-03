@@ -4,6 +4,7 @@ import Vue, { createApp} from '@vue/compat';
 import AuthPage from "@/pages/AuthPage";
 import LoginPage from "@/pages/LoginPage.vue";
 import MainPage from "@/pages/MainPage.vue";
+import ItemPage from "@/pages/ItemPage.vue"
 import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
@@ -22,6 +23,11 @@ const routeInfos = [
     {
         path:"/menu",
         component: MainPage
+    },
+    {
+        path: '/item/:id',
+        name: 'ItemPage',
+        component: ItemPage,
     }
 ]
 

@@ -22,6 +22,7 @@ from main_store.views import (
     JWTTokenObtainPairView,
     UserList,
     UserDetailView,
+    AllItemViewSet
 )
 
 
@@ -35,4 +36,5 @@ urlpatterns = [
     path("auth/token/refresh/", JWTTokenObtainPairView.as_view(), name="token_refresh"),
     path("users/", UserList.as_view(), name="user_list"),
     path("users/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
+    path("items/<int:id>/", AllItemViewSet.as_view(), name="item-detail")
 ] + router.urls

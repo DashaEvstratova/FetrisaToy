@@ -8,7 +8,8 @@
                     <b-card-group deck>
                     <div class="row" style="display: flex; justify-content: space-evenly;">
                         <b-card v-for="pattern in patterns" :key="pattern"
-                                :to="`/pattern/${pattern.id}`"
+                                :to="`/item/${pattern.item.id}`"
+                                @click="$router.push(`/item/${pattern.item.id}`)"
                                 :img-src="pattern.picture"
                                 :title="pattern.item.name"
                                 img-alt="Изображение"
@@ -30,8 +31,9 @@
                     <br>
                     <b-card-group deck>
                     <div class="row" style="display: flex; justify-content: space-evenly;">
-                        <b-card v-for="item in items" :key="item"
-                                :to="`/item/${item.id}`"
+                        <b-card v-for="item in items" :key="item.item.id"
+                                :to="`/item/${item.item.id}`"
+                                @click="$router.push(`/item/${item.item.id}`)"
                                 :img-src="item.picture"
                                 :title="item.item.name"
                                 img-alt="Изображение"

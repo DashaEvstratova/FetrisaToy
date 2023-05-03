@@ -28,6 +28,17 @@ class PatternViewSet(ModelViewSet):
         return Pictures.objects.filter(item__isnull=False, item__category="Выкройка").prefetch_related("item")
 
 
+
+class AllItemViewSet(RetrieveAPIView):
+    serializer_class = PicturesSerializer
+    queryset = Pictures.objects.filter(item__isnull=False)
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(id=self.kwargs['id'])
+
+
 class RegistrationView(APIView):
     serializer_class = UserCreateSerializer
 
