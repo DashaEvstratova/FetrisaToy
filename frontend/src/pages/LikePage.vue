@@ -1,28 +1,24 @@
-<script setup>
-import {MDBInput, MDBBtn, MDBIcon} from 'mdb-vue-ui-kit';
-import {ref} from 'vue';
+<script>
+import {MDBBtn, MDBIcon, MDBInput} from "mdb-vue-ui-kit";
+import ProfilBar from "@/components/ProfilBar.vue";
 import FooterMain from "@/components/FooterMain.vue";
 
-const search1 = ref('');
-</script>
-
-<script>
-import TabContent from "@/components/Base.vue"
-import ProfilBar from "@/components/ProfilBar.vue";
-
 export default {
-    name: "MainPage",
-    components: {
-        TabContent,
-        ProfilBar,
-    },
+    name: "BuketPage",
+    components: {FooterMain, MDBInput, MDBBtn, MDBIcon, ProfilBar},
     data() {
         return {
-            user: null,
-        };
+            item: {},
+        }
     },
     mounted() {
-        if (JSON.parse(localStorage.getItem('user'))) {
+        this.getItemById(this.$route.params.id)
+            .then(item => {
+                this.item = item
+
+            })
+        if (JSON.parse(localStorage.getItem('user'))
+        ) {
             const userId = JSON.parse(localStorage.getItem('user')).user_id;
             this.getUserById(userId)
                 .then(user => {
@@ -32,7 +28,8 @@ export default {
                     console.error(error);
                 });
         }
-    },
+    }
+    ,
     methods: {
         async getUserById(id) {
             const response = await fetch(`http://127.0.0.1:8000/users/`);
@@ -48,7 +45,6 @@ export default {
         }
     }
 }
-
 </script>
 
 <template>
@@ -59,13 +55,13 @@ export default {
                 <td id="rightcol">
                     <template>
                         <MDBInput
-                            v-model="search1"
-                            inputGroup
-                            :formOutline="false"
-                            wrapperClass="mb-3"
-                            placeholder="Search"
-                            aria-label="Search"
-                            aria-describedby="button-addon2"
+                                v-model="search1"
+                                inputGroup
+                                :formOutline="false"
+                                wrapperClass="mb-3"
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="button-addon2"
                         >
                             <MDBBtn color="primary">
                                 <MDBIcon icon="search"/>
@@ -78,25 +74,35 @@ export default {
                 </td>
                 <td id="rightcol">
                     <button @click="redirectToBucket" type="button" class="btn btn-primary btn-circle">
-                    <b-icon class="h1 mb-2" icon="basket3-fill" aria-hidden="true"></b-icon>
-                </button>
+                        <b-icon class="h1 mb-2" icon="basket3-fill" aria-hidden="true"></b-icon>
+                    </button>
                 </td>
                 <td id="rightcol">
-                    <button @click="redirectToLike" type="button" class="btn btn-primary btn-circle">
-                    <b-icon class="h1 mb-2" icon="suit-heart-fill" aria-hidden="true"></b-icon>
+                    <button type="button" @click="redirectToLike" class="btn btn-primary btn-circle">
+                        <b-icon class="h1 mb-2" icon="suit-heart-fill" aria-hidden="true"></b-icon>
                     </button>
                 </td>
             </tr>
         </table>
-        <br>
-        <br>
-        <TabContent/>
     </div>
-    <FooterMain/>
+  <FooterMain/>
 </template>
 
-
 <style scoped>
+
+.product-card img {
+  width: 100%;
+}
+
+.product-card h2 {
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.product-card p {
+  margin: 0.5rem 0;
+}
+
 .btn-circle {
     height: 40px;
     text-align: center;
@@ -104,7 +110,7 @@ export default {
 }
 
 #maket {
-    width: 100%; /* Ширина всей таблицы */
+    width: 110%; /* Ширина всей таблицы */
    }
    TD {
     vertical-align: top; /* Вертикальное выравнивание в ячейках */
@@ -176,6 +182,14 @@ h1.funny-title {
 }
 
 .container {
+    text-align: center;
     margin-top: 5%;
 }
+
+.form-container .form-horizontal .form-group label{
+ font-size: 15px;
+ font-weight: 600;
+ text-transform: uppercase;
+}
+
 </style>

@@ -2,10 +2,11 @@
 import axios from 'axios'
 import {MDBBtn, MDBIcon, MDBInput} from "mdb-vue-ui-kit";
 import ProfilBar from "@/components/ProfilBar.vue";
+import FooterMain from "@/components/FooterMain.vue";
 
 export default {
     name: "ItemPage",
-    components: {MDBInput, MDBBtn, MDBIcon, ProfilBar},
+    components: {FooterMain, MDBInput, MDBBtn, MDBIcon, ProfilBar},
     data() {
         return {
             item: {},
@@ -63,10 +64,16 @@ export default {
             axios.post('http://127.0.0.1:8000/like/create/', {
                 "user": this.user.id,
                 "item": this.item.item.id
-            })
+        })
                 .catch(error => {
                     console.log(error);
                 });
+        },
+        redirectToBucket() {
+            this.$router.push('/bucket');
+        },
+        redirectToLike() {
+            this.$router.push('/like');
         }
     }
 }
@@ -97,12 +104,12 @@ export default {
                     <ProfilBar :user="user"/>
                 </td>
                 <td id="rightcol">
-                    <button type="button" class="btn btn-primary btn-circle">
+                    <button @click="redirectToBucket" type="button" class="btn btn-primary btn-circle">
                         <b-icon class="h1 mb-2" icon="basket3-fill" aria-hidden="true"></b-icon>
                     </button>
                 </td>
                 <td id="rightcol">
-                    <button type="button" class="btn btn-primary btn-circle">
+                    <button type="button" @click="redirectToLike" class="btn btn-primary btn-circle">
                         <b-icon class="h1 mb-2" icon="suit-heart-fill" aria-hidden="true"></b-icon>
                     </button>
                 </td>
@@ -147,8 +154,8 @@ export default {
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h3>{{ item?.item?.price }} ₽</h3>
                                     <button @click="addToLike" type="button" class="btn btn-primary btn-circle" id="like">
-                                        <b-icon class="h1 mb-2" icon="suit-heart-fill" aria-hidden="true"
-                                                style="color: #d3b7c8;"></b-icon>
+                                        <b-icon class="h1 mb-2" icon="heart" aria-hidden="true"
+                                                style="color: #000000;"></b-icon>
                                     </button>
                                 </div>
                                 <br>
@@ -160,6 +167,7 @@ export default {
             </table>
         </div>
     </div>
+    <FooterMain/>
 </template>
 
 

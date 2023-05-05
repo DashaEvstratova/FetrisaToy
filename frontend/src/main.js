@@ -5,6 +5,8 @@ import AuthPage from "@/pages/AuthPage";
 import LoginPage from "@/pages/LoginPage.vue";
 import MainPage from "@/pages/MainPage.vue";
 import ItemPage from "@/pages/ItemPage.vue"
+import LikePage from "@/pages/LikePage.vue";
+import BuketPage from '@/pages/BuketPage.vue'
 import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
@@ -28,7 +30,15 @@ const routeInfos = [
         path: '/item/:id',
         name: 'ItemPage',
         component: ItemPage,
-    }
+    },
+    {
+        path:'/bucket',
+        component: BuketPage
+    },
+    {
+        path:'/like',
+        component: LikePage
+    },
 ]
 
 const router = createRouter({
