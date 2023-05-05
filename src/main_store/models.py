@@ -64,6 +64,7 @@ class Items(models.Model):
     description = models.TextField(max_length=100000)
     category = models.CharField(max_length=25)
 
+
 class Review(models.Model):
     item = models.ForeignKey(Items, on_delete=models.DO_NOTHING)
     text = models.CharField(max_length=10000)
@@ -84,9 +85,11 @@ class Pictures(models.Model):
     picture = models.CharField(max_length=255)
     item = models.ForeignKey(Items, on_delete=models.CASCADE, related_name="pictures")
 
+
 class Likes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Items, on_delete=models.CASCADE)
+
 
 class Buket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

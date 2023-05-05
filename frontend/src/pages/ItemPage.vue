@@ -10,7 +10,8 @@ export default {
         return {
             item: {},
             value: 5,
-            review: ' 20 отзывов'
+            review: ' 20 отзывов',
+            user: null,
         }
     },
     mounted() {
@@ -19,7 +20,19 @@ export default {
                 this.item = item
 
             })
-    },
+        if (JSON.parse(localStorage.getItem('user'))
+        ) {
+            const userId = JSON.parse(localStorage.getItem('user')).user_id;
+            this.getUserById(userId)
+                .then(user => {
+                    this.user = user;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    }
+    ,
     methods: {
         async getItemById(id) {
             return axios.get(`http://127.0.0.1:8000/items/${id}/`)
@@ -31,8 +44,29 @@ export default {
                     console.log(error)
                 })
         },
+        async getUserById(id) {
+            const response = await fetch(`http://127.0.0.1:8000/users/`);
+            const users = await response.json();
+            const user = users.find(user => user.id === id);
+            return user;
+        },
         addToCart() {
-            //
+            axios.post('http://127.0.0.1:8000/bucket/create/', {
+                "user": this.user.id,
+                "item": this.item.item.id
+            })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+        addToLike() {
+            axios.post('http://127.0.0.1:8000/like/create/', {
+                "user": this.user.id,
+                "item": this.item.item.id
+            })
+                .catch(error => {
+                    console.log(error);
+                });
         }
     }
 }
@@ -112,7 +146,7 @@ export default {
                             <div class="form-container form-horizontal">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h3>{{ item?.item?.price }} ₽</h3>
-                                    <button type="button" class="btn btn-primary btn-circle" id="like">
+                                    <button @click="addToLike" type="button" class="btn btn-primary btn-circle" id="like">
                                         <b-icon class="h1 mb-2" icon="suit-heart-fill" aria-hidden="true"
                                                 style="color: #d3b7c8;"></b-icon>
                                     </button>

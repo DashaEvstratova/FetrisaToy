@@ -22,7 +22,11 @@ from main_store.views import (
     JWTTokenObtainPairView,
     UserList,
     UserDetailView,
-    AllItemViewSet
+    AllItemViewSet,
+    bucket_create_view,
+    BuketList,
+    like_create_view,
+    LikeList,
 )
 
 
@@ -36,5 +40,9 @@ urlpatterns = [
     path("auth/token/refresh/", JWTTokenObtainPairView.as_view(), name="token_refresh"),
     path("users/", UserList.as_view(), name="user_list"),
     path("users/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
-    path("items/<int:id>/", AllItemViewSet.as_view(), name="item-detail")
+    path("items/<int:id>/", AllItemViewSet.as_view(), name="item-detail"),
+    path("bucket/create/", bucket_create_view, name="bucket_create"),
+    path("bucket/user/<int:user_id>/", BuketList.as_view(), name="buket-user-list"),
+    path("like/create/", like_create_view, name="like_create"),
+    path("like/user/<int:user_id>/", LikeList.as_view(), name="like-user-list"),
 ] + router.urls
