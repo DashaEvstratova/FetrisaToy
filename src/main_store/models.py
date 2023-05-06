@@ -37,7 +37,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     apartment = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.IntegerField(unique=True, null=True, blank=True)
     date_of_birth = models.DateField(max_length=255, null=True, blank=True)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=False)
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
@@ -90,6 +90,9 @@ class Pictures(models.Model):
 class Likes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Items, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "item"], name="user_item")]
 
 
 class Buket(models.Model):

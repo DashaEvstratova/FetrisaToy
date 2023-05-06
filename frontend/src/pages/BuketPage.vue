@@ -9,14 +9,10 @@ export default {
     data() {
         return {
             item: {},
+            user: null,
         }
     },
     mounted() {
-        this.getItemById(this.$route.params.id)
-            .then(item => {
-                this.item = item
-
-            })
         if (JSON.parse(localStorage.getItem('user'))
         ) {
             const userId = JSON.parse(localStorage.getItem('user')).user_id;
@@ -28,8 +24,7 @@ export default {
                     console.error(error);
                 });
         }
-    }
-    ,
+    },
     methods: {
         async getUserById(id) {
             const response = await fetch(`http://127.0.0.1:8000/users/`);
@@ -37,12 +32,15 @@ export default {
             const user = users.find(user => user.id === id);
             return user;
         },
-        redirectToBucket() {
+        async redirectToBucket() {
             this.$router.push('/bucket');
         },
-        redirectToLike() {
+        async redirectToLike() {
             this.$router.push('/like');
-        }
+        },
+        async redirectToMenu() {
+            this.$router.push('/menu');
+        },
     }
 }
 </script>
@@ -52,6 +50,11 @@ export default {
     <div class="container">
         <table id="maket">
             <tr>
+                <td id="rightcol">
+                    <button @click="redirectToMenu" type="button" class="btn btn-primary btn-circle">
+                        <b-icon class="h1 mb-2" icon="menu-button-wide-fill" aria-hidden="true"></b-icon>
+                    </button>
+                </td>
                 <td id="rightcol">
                     <template>
                         <MDBInput

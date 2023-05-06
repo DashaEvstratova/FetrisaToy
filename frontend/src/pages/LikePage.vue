@@ -2,6 +2,7 @@
 import {MDBBtn, MDBIcon, MDBInput} from "mdb-vue-ui-kit";
 import ProfilBar from "@/components/ProfilBar.vue";
 import FooterMain from "@/components/FooterMain.vue";
+import axios from 'axios';
 
 export default {
     name: "BuketPage",
@@ -9,27 +10,24 @@ export default {
     data() {
         return {
             item: {},
+            user: null,
+            likes: [],
         }
     },
     mounted() {
-        this.getItemById(this.$route.params.id)
-            .then(item => {
-                this.item = item
-
-            })
         if (JSON.parse(localStorage.getItem('user'))
         ) {
             const userId = JSON.parse(localStorage.getItem('user')).user_id;
             this.getUserById(userId)
                 .then(user => {
                     this.user = user;
+                    this.fetchLikes();
                 })
                 .catch(error => {
                     console.error(error);
                 });
         }
-    }
-    ,
+  },
     methods: {
         async getUserById(id) {
             const response = await fetch(`http://127.0.0.1:8000/users/`);
@@ -37,12 +35,26 @@ export default {
             const user = users.find(user => user.id === id);
             return user;
         },
-        redirectToBucket() {
+        async redirectToBucket() {
             this.$router.push('/bucket');
         },
-        redirectToLike() {
+        async redirectToLike() {
             this.$router.push('/like');
-        }
+        },
+        async redirectToMenu() {
+            this.$router.push('/menu');
+        },
+        async fetchLikes() {
+            const user_id = this.user.id; // Замените на фактический ID пользователя
+            axios
+                .get(`http://127.0.0.1:8000/like/user/${user_id}/`)
+                .then(response => {
+                    this.likes = response.data;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
     }
 }
 </script>
@@ -52,6 +64,11 @@ export default {
     <div class="container">
         <table id="maket">
             <tr>
+                <td id="rightcol">
+                    <button @click="redirectToMenu" type="button" class="btn btn-primary btn-circle">
+                        <b-icon class="h1 mb-2" icon="menu-button-wide-fill" aria-hidden="true"></b-icon>
+                    </button>
+                </td>
                 <td id="rightcol">
                     <template>
                         <MDBInput
@@ -85,6 +102,28 @@ export default {
             </tr>
         </table>
     </div>
+<!--    <img :src="require(`../assets/1.jpeg`)" :alt="selectedImage">-->
+    <b-card-group deck>
+                    <div class="row" style="display: flex; justify-content: space-evenly;">
+                        <b-card v-for="item in likes" :key="item.item.id"
+                                :to="`/item/${item.item.id}`"
+                                @click="$router.push(`/item/${item.item.id}`)"
+                                :img-src="require(`../assets/${item.item.pictures[0].picture}`)"
+                                :title="item.item.name"
+                                img-alt="Изображение"
+                                img-top
+                                tag="article"
+                                style="max-width: 20rem"
+                                class="card-scale md-4 mb-4"
+                        >
+                            <b-card-title class='d-flex justify-content font-weight-bold'>{{ item.item.price }} ₽</b-card-title>
+                            <b-card-text class="text-truncate d-flex justify-content" style="max-width: 300px;">
+                                {{ item.item.description }}
+                            </b-card-text>
+                        </b-card>
+                        </div>
+                    </b-card-group>
+<!--    </div>-->
   <FooterMain/>
 </template>
 

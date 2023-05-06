@@ -19,6 +19,7 @@ export default {
         this.getItemById(this.$route.params.id)
             .then(item => {
                 this.item = item
+                console.log(this.item)
 
             })
         if (JSON.parse(localStorage.getItem('user'))
@@ -74,7 +75,10 @@ export default {
         },
         redirectToLike() {
             this.$router.push('/like');
-        }
+        },
+        async redirectToMenu() {
+            this.$router.push('/menu');
+        },
     }
 }
 </script>
@@ -83,6 +87,11 @@ export default {
     <div class="container">
         <table id="maket">
             <tr>
+                <td id="rightcol">
+                    <button @click="redirectToMenu" type="button" class="btn btn-primary btn-circle">
+                        <b-icon class="h1 mb-2" icon="menu-button-wide-fill" aria-hidden="true"></b-icon>
+                    </button>
+                </td>
                 <td id="rightcol">
                     <template>
                         <MDBInput
@@ -134,7 +143,7 @@ export default {
             <table>
                 <tr>
                     <td>
-            <img :src="item.picture" alt="Product Image" class="product-image">
+            <img :src="require(`@/assets/${item.picture}`)" alt="Product Image" class="product-image">
                     </td>
                     <td>
             <div class="text" style="width: 650px;">
