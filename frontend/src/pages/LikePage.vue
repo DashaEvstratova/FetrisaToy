@@ -102,7 +102,6 @@ export default {
             </tr>
         </table>
     </div>
-<!--    <img :src="require(`../assets/1.jpeg`)" :alt="selectedImage">-->
     <b-card-group deck>
                     <div class="row" style="display: flex; justify-content: space-evenly;">
                         <b-card v-for="item in likes" :key="item.item.id"

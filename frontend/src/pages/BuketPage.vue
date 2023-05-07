@@ -2,14 +2,16 @@
 import {MDBBtn, MDBIcon, MDBInput} from "mdb-vue-ui-kit";
 import ProfilBar from "@/components/ProfilBar.vue";
 import FooterMain from "@/components/FooterMain.vue";
+import axios from "axios";
 
 export default {
     name: "BuketPage",
     components: {FooterMain, MDBInput, MDBBtn, MDBIcon, ProfilBar},
     data() {
         return {
-            item: {},
+            items: {},
             user: null,
+            count: 1
         }
     },
     mounted() {
@@ -19,6 +21,7 @@ export default {
             this.getUserById(userId)
                 .then(user => {
                     this.user = user;
+                    this.fetchBucketItems()
                 })
                 .catch(error => {
                     console.error(error);
@@ -32,6 +35,16 @@ export default {
             const user = users.find(user => user.id === id);
             return user;
         },
+        async fetchBucketItems() {
+      axios
+        .get(`http://127.0.0.1:8000/bucket/user/${this.user.id}/`)
+        .then(response => {
+          this.items = response.data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
         async redirectToBucket() {
             this.$router.push('/bucket');
         },
@@ -41,6 +54,12 @@ export default {
         async redirectToMenu() {
             this.$router.push('/menu');
         },
+        decrementCount(item) {
+            item.count = Math.max(0, item.count - 1);
+        },
+        incrementCount(item) {
+            item.count = Math.min(100, item.count + 1);
+        }
     }
 }
 </script>
@@ -87,6 +106,35 @@ export default {
                 </td>
             </tr>
         </table>
+    </div>
+    <div v-for="item in items" :key="item.item.id" class="card mb-3"
+         style="max-width: 540px; margin-top: 20px; margin-left: auto; margin-right: auto;">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <img
+                    :src="require(`../assets/${item.item.pictures[0].picture}`)"
+                    @click="$router.push(`/item/${item.item.id}`)"
+                    class="card-img"
+                    alt="Упс"
+                    height="170"
+                >
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.item.name }}</h5>
+                    <div class="input-group quantity_goods text-truncate d-flex justify-content" style="max-width: 300px;">
+                        {{ item.item.description }}
+                    </div>
+                    <br>
+                        <p class="card-text">
+                            <small class="text-muted">{{ item.item.price }} руб.</small>
+                        </p>
+                    <button type="button" @click="decrementCount(item)">-</button>
+                    <input type="number" :min="0" :max="100" v-model="item.count" readonly class="raz">
+                    <button type="button" @click="incrementCount(item)">+</button>
+                </div>
+            </div>
+        </div>
     </div>
     <FooterMain/>
 </template>
