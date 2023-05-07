@@ -21,6 +21,60 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 
 
+class CheckBucketItemAPI(APIView):
+    def get(self, request, *args, **kwargs):
+        user_id = request.GET.get("user_id")
+        item_id = request.GET.get("item_id")
+
+        try:
+            bucket = Buket.objects.get(user_id=user_id, item_id=item_id)
+            count = bucket.count
+            return Response({"count": count}, status=status.HTTP_200_OK)
+        except Buket.DoesNotExist:
+            return Response({"exists": False}, status=status.HTTP_200_OK)
+
+
+class CheckLikeItemAPI(APIView):
+    def get(self, request, *args, **kwargs):
+        user_id = request.GET.get("user_id")
+        item_id = request.GET.get("item_id")
+
+        try:
+            like = Likes.objects.get(user_id=user_id, item_id=item_id)
+            return Response({"exists": True}, status=status.HTTP_200_OK)
+        except Buket.DoesNotExist:
+            return Response({"exists": False}, status=status.HTTP_200_OK)
+
+
+class RemoveLikeAPI(APIView):
+    def delete(self, request, *args, **kwargs):
+        user_id = request.GET.get("user_id")
+        item_id = request.GET.get("item_id")
+
+        try:
+            like = Likes.objects.get(user_id=user_id, item_id=item_id)
+            like.delete()
+            return Response({"success": True}, status=status.HTTP_200_OK)
+        except Likes.DoesNotExist:
+            return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
+
+
+class UpdateBucketItemAPI(APIView):
+    def put(self, request, *args, **kwargs):
+        user_id = request.data.get("user_id")
+        item_id = request.data.get("item_id")
+        count = request.data.get("count")
+
+        try:
+            bucket = Buket.objects.get(user_id=user_id, item_id=item_id)
+            bucket.count = count
+            bucket.save()
+
+            return Response({"message": "Bucket item updated successfully."}, status=status.HTTP_200_OK)
+        except Buket.DoesNotExist:
+            return Response({"message": "Bucket item does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+
 class ItemViewSet(ModelViewSet):
     def get_serializer_class(self):
         return PicturesSerializer
@@ -99,6 +153,7 @@ class BuketList(generics.ListAPIView):
         user_id = self.kwargs["user_id"]
         queryset = Buket.objects.filter(user_id=user_id)
         return queryset
+
 
 @api_view(["POST"])
 def like_create_view(request):

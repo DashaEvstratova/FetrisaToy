@@ -92,10 +92,13 @@ class Likes(models.Model):
     item = models.ForeignKey(Items, on_delete=models.CASCADE)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["user", "item"], name="user_item")]
+        constraints = [models.UniqueConstraint(fields=["user", "item"], name="user_item_buket")]
 
 
 class Buket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Items, on_delete=models.CASCADE)
-    count = models.IntegerField()
+    count = models.IntegerField(default=0)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user", "item"], name="user_item")]

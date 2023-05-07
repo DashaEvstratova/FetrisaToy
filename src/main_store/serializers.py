@@ -49,7 +49,14 @@ class BucketCreateSerializer(serializers.Serializer):
         item_id = validated_data["item"]
         user = User.objects.get(id=user_id)
         item = Items.objects.get(id=item_id)
-        bucket = Buket.objects.create(user=user, item=item)
+
+        bucket = Buket.objects.filter(user=user, item=item).first()
+        if bucket:
+            bucket.count += 1
+            bucket.save()
+        else:
+            bucket = Buket.objects.create(user=user, item=item, count=1)
+
         return bucket
 
 

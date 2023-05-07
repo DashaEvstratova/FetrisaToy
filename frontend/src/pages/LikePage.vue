@@ -128,7 +128,13 @@ export default {
 </template>
 
 <style scoped>
+.card-scale {
+  transition: transform 0.3s ease-out;
+}
 
+.card-scale:hover {
+  transform: scale(1.05);
+}
 .product-card img {
   width: 100%;
 }

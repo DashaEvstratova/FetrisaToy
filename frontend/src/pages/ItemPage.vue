@@ -13,6 +13,8 @@ export default {
             value: 5,
             review: ' 20 отзывов',
             user: null,
+            count: 0,
+            res: 0
         }
     },
     mounted() {
@@ -28,6 +30,8 @@ export default {
             this.getUserById(userId)
                 .then(user => {
                     this.user = user;
+                    this.checkBuketItem()
+                    this.checkLikeItem()
                 })
                 .catch(error => {
                     console.error(error);
@@ -52,33 +56,97 @@ export default {
             const user = users.find(user => user.id === id);
             return user;
         },
-        addToCart() {
+        async checkBuketItem() {
+            const user_id = this.user.id; // Замените на нужное значение
+            const item_id = this.item.item.id; // Замените на нужное значение
+
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/check-bucket-item/', {
+                    params: {
+                        user_id: user_id,
+                        item_id: item_id
+                    }
+                });
+                this.count = response.data.count;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        },
+        async checkLikeItem() {
+            const user_id = this.user.id; // Замените на нужное значение
+            const item_id = this.item.item.id; // Замените на нужное значение
+
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/check-like-item/', {
+                    params: {
+                        user_id: user_id,
+                        item_id: item_id
+                    }
+                });
+                this.res = response.data.exists;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        },
+        async addToCart() {
             axios.post('http://127.0.0.1:8000/bucket/create/', {
                 "user": this.user.id,
                 "item": this.item.item.id
-            })
+            }).then(location.reload())
                 .catch(error => {
                     console.log(error);
                 });
+        },
+        async updateBucketItem(count) {
+            try {
+                await axios.put('http://127.0.0.1:8000/update-bucket-item/', {
+                    user_id: this.user.id,
+                    item_id: this.item.item.id,
+                    count: count
+                });
+            } catch (error) {
+                // Обработка ошибки
+                console.error(error);
+            }
         },
         addToLike() {
-            axios.post('http://127.0.0.1:8000/like/create/', {
-                "user": this.user.id,
-                "item": this.item.item.id
-        })
-                .catch(error => {
-                    console.log(error);
-                });
+            if (this.res) {
+                axios.delete(`http://127.0.0.1:8000/remove-like-item/?user_id=${this.user.id}&item_id=${this.item.item.id}`)
+                    .then(() => {
+                        this.res = false;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                axios.post('http://127.0.0.1:8000/like/create/', {
+                    "user": this.user.id,
+                    "item": this.item.item.id
+                }).then(
+                    this.res = true
+                )
+                    .catch(error => {
+                        console.log(error);
+                    });
+            }
         },
-        redirectToBucket() {
+        async redirectToBucket() {
             this.$router.push('/bucket');
         },
-        redirectToLike() {
+        async redirectToLike() {
             this.$router.push('/like');
         },
         async redirectToMenu() {
             this.$router.push('/menu');
         },
+            async decrementCount() {
+                this.count = Math.max(0, this.count - 1);
+                this.updateBucketItem(this.count)
+            },
+            async incrementCount() {
+                this.count = Math.min(100, this.count + 1);
+                this.updateBucketItem(this.count)
+            }
     }
 }
 </script>
@@ -95,13 +163,13 @@ export default {
                 <td id="rightcol">
                     <template>
                         <MDBInput
-                                v-model="search1"
-                                inputGroup
-                                :formOutline="false"
-                                wrapperClass="mb-3"
-                                placeholder="Search"
-                                aria-label="Search"
-                                aria-describedby="button-addon2"
+                            v-model="search1"
+                            inputGroup
+                            :formOutline="false"
+                            wrapperClass="mb-3"
+                            placeholder="Search"
+                            aria-label="Search"
+                            aria-describedby="button-addon2"
                         >
                             <MDBBtn color="primary">
                                 <MDBIcon icon="search"/>
@@ -131,44 +199,54 @@ export default {
             <table>
                 <tr>
                     <td>
-            <div class="small-div" style="float: left;">
-                <b-form-rating v-model="value" readonly show-value precision="2"></b-form-rating>
-            </div>
+                        <div class="small-div" style="float: left;">
+                            <b-form-rating v-model="value" readonly show-value precision="2"></b-form-rating>
+                        </div>
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
-                        <a href="">{{review}}</a>
+                        <a href="">{{ review }}</a>
                     </td>
                 </tr>
             </table>
             <table>
                 <tr>
                     <td>
-            <img :src="require(`@/assets/${item.picture}`)" alt="Product Image" class="product-image">
+                        <img :src="require(`../assets/9.jpg`)" alt="Product Image" class="product-image">
                     </td>
                     <td>
-            <div class="text" style="width: 650px;">
-                <p>Размер: {{ item?.item?.size }}</p>
-                <p v-if="item?.item?.number">
-                    Осталось: {{ item?.item?.number }}
-                </p>
-                <p v-else>
-                    Нет в наличии
-                </p>
-                <p>{{ item?.item?.description }}</p>
-            </div>
+                        <div class="text" style="width: 650px;">
+                            <p>Размер: {{ item?.item?.size }}</p>
+                            <p v-if="item?.item?.number">
+                                Осталось: {{ item?.item?.number }}
+                            </p>
+                            <p v-else>
+                                Нет в наличии
+                            </p>
+                            <p>{{ item?.item?.description }}</p>
+                        </div>
                     </td>
                     <td style="width: 700px;">
                         <div class="col-md-5" style="width: 300px">
                             <div class="form-container form-horizontal">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h3>{{ item?.item?.price }} ₽</h3>
-                                    <button @click="addToLike" type="button" class="btn btn-primary btn-circle" id="like">
-                                        <b-icon class="h1 mb-2" icon="heart" aria-hidden="true"
+                                    <button @click="addToLike" type="button" class="btn btn-primary btn-circle"
+                                            id="like">
+                                        <b-icon v-if="res" class="h1 mb-2" icon="heart-fill" aria-hidden="true"
+                                                style="color: #000000;"></b-icon>
+                                        <b-icon v-else class="h1 mb-2" icon="heart" aria-hidden="true"
                                                 style="color: #000000;"></b-icon>
                                     </button>
                                 </div>
                                 <br>
-                                <button @click="addToCart" type="submit" class="btn btn-default">Добавить в корзину</button>
+                                <button v-if='!count' @click="addToCart" type="submit" class="btn btn-default">Добавить
+                                    в корзину
+                                </button>
+                                <div v-else>
+                                    <button type="button" @click="decrementCount">-</button>
+                                    <input type="number" :min="0" :max="100" v-model="count" readonly class="raz">
+                                    <button type="button" @click="incrementCount">+</button>
+                                </div>
                             </div>
                         </div>
                     </td>
@@ -181,6 +259,7 @@ export default {
 
 
 <style scoped>
+
 #like {
     background-color: transparent;
     border-color: transparent;

@@ -27,6 +27,10 @@ from main_store.views import (
     BuketList,
     like_create_view,
     LikeList,
+    CheckBucketItemAPI,
+    UpdateBucketItemAPI,
+    CheckLikeItemAPI,
+    RemoveLikeAPI,
 )
 
 
@@ -45,4 +49,8 @@ urlpatterns = [
     path("bucket/user/<int:user_id>/", BuketList.as_view(), name="buket-user-list"),
     path("like/create/", like_create_view, name="like_create"),
     path("like/user/<int:user_id>/", LikeList.as_view(), name="like-user-list"),
+    path("check-bucket-item/", CheckBucketItemAPI.as_view(), name="check_bucket_item"),
+    path("check-like-item/", CheckLikeItemAPI.as_view(), name="check_like_item"),
+    path("update-bucket-item/", UpdateBucketItemAPI.as_view(), name="update-bucket-item"),
+    path("remove-like-item/", RemoveLikeAPI.as_view(), name="remove-like-item"),
 ] + router.urls
