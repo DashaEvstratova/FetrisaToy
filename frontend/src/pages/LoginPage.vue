@@ -12,18 +12,18 @@ export default {
     },
     methods: {
         async login() {
-            await axios.post('http://localhost:8000/auth/token/', {
-                email: this.email,
-                password: this.password,
-            }).then(response => {
+            try {
+                const response = await axios.post('http://localhost:8000/auth/token/', {
+                    email: this.email,
+                    password: this.password,
+                });
                 const token = response.data.access;
-                const user = jwtDecode(token)
-                // сохраняем данные пользователя в localStorage
+                const user = jwtDecode(token);
                 localStorage.setItem('user', JSON.stringify(user));
                 this.$router.push('/menu');
-            }).catch(error => {
-                this.error = error.response.data;
-            });
+            } catch (error) {
+                console.log(error.response.data)
+            }
         }
     }
 }

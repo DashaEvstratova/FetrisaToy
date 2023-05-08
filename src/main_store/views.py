@@ -25,6 +25,14 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+
 @csrf_exempt
 def create_order(request):
     if request.method == "POST":
@@ -150,7 +158,9 @@ class RegistrationView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
+
+        # Создаем пользователя и устанавливаем поле is_active в True
+        user = serializer.save(is_active=True)
 
         token_data = TokenObtainPairSerializer().get_token(user)
         token = str(token_data.access_token)
