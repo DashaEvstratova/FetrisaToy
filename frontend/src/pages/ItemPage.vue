@@ -14,7 +14,8 @@ export default {
             review: ' 20 отзывов',
             user: null,
             count: 0,
-            res: 0
+            res: 0,
+            showModal: false
         }
     },
     mounted() {
@@ -40,6 +41,16 @@ export default {
     }
     ,
     methods: {
+        redirectToRegistration() {
+            this.$router.push('/auth');
+            this.closeModal();
+        },
+        async openModal() {
+            this.showModal = true;
+        },
+        async closeModal() {
+            this.showModal = false;
+        },
         async getUserById(id) {
             const response = await fetch(`http://127.0.0.1:8000/users/`);
             const users = await response.json();
@@ -89,13 +100,18 @@ export default {
             }
         },
         async addToCart() {
-            axios.post('http://127.0.0.1:8000/bucket/create/', {
-                "user": this.user.id,
-                "item": this.item.item.id
-            }).then(location.reload())
-                .catch(error => {
-                    console.log(error);
-                });
+            if (this.user) {
+                axios.post('http://127.0.0.1:8000/bucket/create/', {
+                    "user": this.user.id,
+                    "item": this.item.item.id
+                }).then(location.reload())
+                    .catch(error => {
+                        console.log(error);
+                    });
+            } else {
+                // Показать модальное окно с просьбой зарегистрироваться
+                this.openModal();
+            }
         },
         async updateBucketItem(count) {
             try {
@@ -110,24 +126,29 @@ export default {
             }
         },
         addToLike() {
-            if (this.res) {
-                axios.delete(`http://127.0.0.1:8000/remove-like-item/?user_id=${this.user.id}&item_id=${this.item.item.id}`)
-                    .then(() => {
-                        this.res = false;
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
+            if (this.user) {
+                if (this.res) {
+                    axios.delete(`http://127.0.0.1:8000/remove-like-item/?user_id=${this.user.id}&item_id=${this.item.item.id}`)
+                        .then(() => {
+                            this.res = false;
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                } else {
+                    axios.post('http://127.0.0.1:8000/like/create/', {
+                        "user": this.user.id,
+                        "item": this.item.item.id
+                    }).then(
+                        this.res = true
+                    )
+                        .catch(error => {
+                            console.log(error);
+                        });
+                }
             } else {
-                axios.post('http://127.0.0.1:8000/like/create/', {
-                    "user": this.user.id,
-                    "item": this.item.item.id
-                }).then(
-                    this.res = true
-                )
-                    .catch(error => {
-                        console.log(error);
-                    });
+                // Показать модальное окно с просьбой зарегистрироваться
+                this.openModal();
             }
         },
         async redirectToBucket() {
@@ -208,6 +229,16 @@ export default {
                     </td>
                 </tr>
             </table>
+            <div v-if="showModal" class="modal">
+                <div class="modal-content">
+                    <h3>Зарегистрируйтесь</h3>
+                    <p>Пожалуйста, зарегистрируйтесь, чтобы добавить товар или поставить лайк.</p>
+                    <div class="button-row">
+                        <button @click="redirectToRegistration">Зарегистрироваться</button>
+                        <button @click="closeModal">Отмена</button>
+                    </div>
+                </div>
+            </div>
             <table>
                 <tr>
                     <td>
@@ -259,6 +290,42 @@ export default {
 
 
 <style scoped>
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+    width: 40%;
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+}
+
+.modal-content button {
+    margin-top: 10px;
+    width: 25%;
+}
+
+.button-row button {
+  margin-right: 10px;
+}
+
+.button-row button:last-child {
+  margin-right: 0;
+}
+
 #like {
     background-color: transparent;
     border-color: transparent;
