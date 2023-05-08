@@ -2,16 +2,13 @@
 import {MDBBtn, MDBIcon, MDBInput} from "mdb-vue-ui-kit";
 import ProfilBar from "@/components/ProfilBar.vue";
 import FooterMain from "@/components/FooterMain.vue";
-import axios from 'axios';
 
 export default {
-    name: "BuketPage",
+    name: "PayPage",
     components: {FooterMain, MDBInput, MDBBtn, MDBIcon, ProfilBar},
     data() {
         return {
-            item: {},
             user: null,
-            likes: [],
         }
     },
     mounted() {
@@ -21,7 +18,6 @@ export default {
             this.getUserById(userId)
                 .then(user => {
                     this.user = user;
-                    this.fetchLikes();
                 })
                 .catch(error => {
                     console.error(error);
@@ -43,17 +39,6 @@ export default {
         },
         async redirectToMenu() {
             this.$router.push('/menu');
-        },
-        async fetchLikes() {
-            const user_id = this.user.id; // Замените на фактический ID пользователя
-            axios
-                .get(`http://127.0.0.1:8000/like/user/${user_id}/`)
-                .then(response => {
-                    this.likes = response.data;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
         },
     }
 }
@@ -102,37 +87,17 @@ export default {
             </tr>
         </table>
     </div>
-    <b-card-group deck>
-                    <div class="row" style="display: flex; justify-content: space-evenly;">
-                        <b-card v-for="item in likes" :key="item.item.id"
-                                :to="`/item/${item.item.id}`"
-                                @click="$router.push(`/item/${item.item.id}`)"
-                                :img-src="require(`../assets/${item.item.pictures[0].picture}`)"
-                                :title="item.item.name"
-                                img-alt="Изображение"
-                                img-top
-                                tag="article"
-                                style="max-width: 20rem"
-                                class="card-scale md-4 mb-4"
-                        >
-                            <b-card-title class='d-flex justify-content font-weight-bold'>{{ item.item.price }} ₽</b-card-title>
-                            <b-card-text class="text-truncate d-flex justify-content" style="max-width: 300px;">
-                                {{ item.item.description }}
-                            </b-card-text>
-                        </b-card>
-                        </div>
-                    </b-card-group>
-  <FooterMain/>
+    <br>
+    <br>
+    <img :src="require(`../assets/done.png`)" alt="Product Image" style="width: 30%; height: auto;">
+   <br>
+    <br>
+    <br>
+    <FooterMain/>
 </template>
 
 <style scoped>
-.card-scale {
-  transition: transform 0.3s ease-out;
-}
 
-.card-scale:hover {
-  transform: scale(1.05);
-}
 .product-card img {
   width: 100%;
 }
@@ -234,5 +199,4 @@ h1.funny-title {
  font-weight: 600;
  text-transform: uppercase;
 }
-
 </style>

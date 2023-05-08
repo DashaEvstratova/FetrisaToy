@@ -11,7 +11,7 @@ export default {
         return {
             items: {},
             user: null,
-            count: 1
+            summ: 0
         }
     },
     mounted() {
@@ -21,7 +21,7 @@ export default {
             this.getUserById(userId)
                 .then(user => {
                     this.user = user;
-                    this.fetchBucketItems()
+                    this.fetchBucketItems();
                 })
                 .catch(error => {
                     console.error(error);
@@ -29,6 +29,11 @@ export default {
         }
     },
     methods: {
+        async getSum() {
+            for (let i = 0; i < this.items.length; i++) {
+                this.summ += this.items[i].item.price * this.items[i].count;
+            }
+        },
         async getUserById(id) {
             const response = await fetch(`http://127.0.0.1:8000/users/`);
             const users = await response.json();
@@ -40,13 +45,35 @@ export default {
         .get(`http://127.0.0.1:8000/bucket/user/${this.user.id}/`)
         .then(response => {
           this.items = response.data;
+          this.getSum();
         })
         .catch(error => {
           console.log(error);
         });
-    },
+        },
         async redirectToBucket() {
             this.$router.push('/bucket');
+        },
+        async ToPay() {
+            const items = this.items.map(item => {
+                return {
+                    id: item.item.id,
+                    count: item.count
+                };
+            });
+            const total = this.summ;
+            axios.post('http://127.0.0.1:8000/create-order/', { items: items, total: total, user:this.user.id },
+            { headers: { 'Content-Type': 'application/json' } })
+                .then(response => {
+                    // Обработка успешного создания заказа
+                    console.log(response.data);
+                    // Дополнительные действия, например, перенаправление на страницу успешного заказа
+                })
+                .catch(error => {
+                    // Обработка ошибок
+                    console.error(error);
+                });
+            this.$router.push('/pay');
         },
         async redirectToLike() {
             this.$router.push('/like');
@@ -54,11 +81,50 @@ export default {
         async redirectToMenu() {
             this.$router.push('/menu');
         },
+        async updateBucketItem(item_id, count) {
+            try {
+                await axios.put('http://127.0.0.1:8000/update-bucket-item/', {
+                    user_id: this.user.id,
+                    item_id: item_id,
+                    count: count
+                });
+            } catch (error) {
+                // Обработка ошибки
+                console.error(error);
+            }
+        },
+        removeItem(item) {
+            const index = this.items.indexOf(item);
+            if (index !== -1) {
+                this.items.splice(index, 1);
+                this.deleteItem(item);
+            }
+        },
+        deleteItem(item) {
+            console.log(item.id)
+            axios
+                .delete(`http://127.0.0.1:8000/remove-bucket-item/?user_id=${this.user.id}&item_id=${item.item.id}`)
+                .then(() => {
+                    console.log("Object deleted successfully");
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
         decrementCount(item) {
             item.count = Math.max(0, item.count - 1);
+            this.summ -= item.item.price
+            if (item.count === 0) {
+                this.removeItem(item);
+            }
+            else {
+                this.updateBucketItem(item.id, item.count)
+            }
         },
         incrementCount(item) {
             item.count = Math.min(100, item.count + 1);
+            this.updateBucketItem(item.item.id, item.count)
+            this.summ += item.item.price
         }
     }
 }
@@ -107,40 +173,60 @@ export default {
             </tr>
         </table>
     </div>
-    <div v-for="item in items" :key="item.item.id" class="card mb-3"
-         style="max-width: 540px; margin-top: 20px; margin-left: auto; margin-right: auto;">
-        <div class="row no-gutters">
-            <div class="col-md-4">
-                <img
-                    :src="require(`../assets/${item.item.pictures[0].picture}`)"
-                    @click="$router.push(`/item/${item.item.id}`)"
-                    class="card-img"
-                    alt="Упс"
-                    height="170"
-                >
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">{{ item.item.name }}</h5>
-                    <div class="input-group quantity_goods text-truncate d-flex justify-content" style="max-width: 300px;">
-                        {{ item.item.description }}
+    <br>
+    <br>
+    <table style="width: 100%; table-layout: fixed;">
+        <tr>
+            <td style="width: 70%;">
+                <div v-for="item in items" :key="item.item.id" class="card mb-5"
+                     style="max-width: 540px; margin-top: 20px; margin-left: auto; margin-right: auto;">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img
+                                :src="require(`../assets/${item.item.pictures[0].picture}`)"
+                                @click="$router.push(`/item/${item.item.id}`)"
+                                class="card-img"
+                                alt="Упс"
+                                height="170"
+                            >
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.item.name }}</h5>
+                                <div class="input-group quantity_goods text-truncate d-flex justify-content"
+                                     style="max-width: 300px;">
+                                    {{ item.item.description }}
+                                </div>
+                                <br>
+                                <p class="card-text">
+                                    <small class="text-muted">{{ item.item.price }} руб.</small>
+                                </p>
+                                <button type="button" @click="decrementCount(item)">-</button>
+                                <input type="number" :min="0" :max="100" v-model="item.count" readonly class="raz">
+                                <button type="button" @click="incrementCount(item)">+</button>
+                            </div>
+                        </div>
                     </div>
-                    <br>
-                        <p class="card-text">
-                            <small class="text-muted">{{ item.item.price }} руб.</small>
-                        </p>
-                    <button type="button" @click="decrementCount(item)">-</button>
-                    <input type="number" :min="0" :max="100" v-model="item.count" readonly class="raz">
-                    <button type="button" @click="incrementCount(item)">+</button>
                 </div>
-            </div>
-        </div>
-    </div>
+            </td>
+            <td style="width: 30%;">
+                        <div class="col-md-5" style="width: 300px">
+                            <div class="form-container form-horizontal">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <h3>Итого: {{ summ }} ₽</h3>
+                                </div>
+                                <br>
+                                <button @click="ToPay" type="submit" class="btn btn-default">Перейти к оформлению
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+        </tr>
+    </table>
     <FooterMain/>
 </template>
 
 <style scoped>
-
 .product-card img {
   width: 100%;
 }
@@ -241,6 +327,46 @@ h1.funny-title {
  font-size: 15px;
  font-weight: 600;
  text-transform: uppercase;
+}
+.container {
+    text-align: center;
+    margin-top: 5%;
+}
+
+.centered-block {
+    display: inline-block;
+    width: 110%;
+    height: 110%;
+    text-align: left;
+    padding: 1rem;
+}
+
+.form-container{
+ background: #FAE8DC;
+ font-family: 'Nunito', sans-serif;
+ padding: 40px;
+ border-radius: 20px;
+ box-shadow: 14px 14px 20px #E6B493, -14px -14px 20px #ffffff;
+}
+
+.form-container .form-horizontal .form-group label{
+ font-size: 15px;
+ font-weight: 600;
+ text-transform: uppercase;
+}
+
+.btn-default{
+ color: #000;
+ background-color: #ffffff;
+ font-size: 15px;
+ font-weight: bold;
+ text-transform: uppercase;
+ width: 100%;
+ padding: 12px 15px 11px;
+ border-radius: 20px;
+ box-shadow: 6px 6px 6px #d3a688, -6px -6px 6px #ffffff;
+ border: none;
+ transition: all 0.5s ease 0s;
 }
 
 </style>

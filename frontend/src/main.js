@@ -12,6 +12,7 @@ import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import PayPage from "@/pages/PayPage.vue";
 
 const routeInfos = [
     {
@@ -39,6 +40,10 @@ const routeInfos = [
         path:'/like',
         component: LikePage
     },
+    {
+        path:'/pay',
+        component: PayPage
+    }
 ]
 
 const router = createRouter({

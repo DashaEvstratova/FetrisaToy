@@ -40,6 +40,12 @@ export default {
     }
     ,
     methods: {
+        async getUserById(id) {
+            const response = await fetch(`http://127.0.0.1:8000/users/`);
+            const users = await response.json();
+            const user = users.find(user => user.id === id);
+            return user;
+        },
         async getItemById(id) {
             return axios.get(`http://127.0.0.1:8000/items/${id}/`)
                 .then(response => {
@@ -49,12 +55,6 @@ export default {
                     // Обработка ошибки
                     console.log(error)
                 })
-        },
-        async getUserById(id) {
-            const response = await fetch(`http://127.0.0.1:8000/users/`);
-            const users = await response.json();
-            const user = users.find(user => user.id === id);
-            return user;
         },
         async checkBuketItem() {
             const user_id = this.user.id; // Замените на нужное значение
@@ -259,7 +259,6 @@ export default {
 
 
 <style scoped>
-
 #like {
     background-color: transparent;
     border-color: transparent;

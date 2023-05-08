@@ -1,3 +1,4 @@
+from django.views import View
 from main_store.serializers import (
     ItemSerializer,
     PicturesSerializer,
@@ -7,7 +8,7 @@ from main_store.serializers import (
     LikeCreateSerializer,
     LikeSerializer,
 )
-from main_store.models import Items, Pictures, User, Buket, Likes
+from main_store.models import Items, Pictures, User, Buket, Likes, Orders, OrederData
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status
 from rest_framework.response import Response
@@ -19,6 +20,35 @@ from djoser.serializers import UserCreateSerializer
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+
+@csrf_exempt
+def create_order(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        # Получаем данные из запроса
+        items = data.get("items")
+        total = data.get("total")
+        user_id = data.get("user")
+        user = User.objects.get(id=user_id)
+        # Создаем новый заказ и сохраняем его в базе данных
+        order = Orders.objects.create(client=user, sum_of_order=total)
+
+        # Сохраняем данные о товарах в заказе
+        for item in items:
+            item_id = Items.objects.get(id=item["id"])
+            OrederData.objects.create(item=item_id, count=item["count"], order=order)
+
+        # Удаляем товары из корзины
+        item_ids = [item["id"] for item in items]
+        Buket.objects.filter(item__id__in=item_ids).delete()
+
+        return JsonResponse({"success": True, "order_id": order.id})
+
+    return JsonResponse({"success": False})
 
 
 class CheckBucketItemAPI(APIView):
@@ -54,6 +84,19 @@ class RemoveLikeAPI(APIView):
         try:
             like = Likes.objects.get(user_id=user_id, item_id=item_id)
             like.delete()
+            return Response({"success": True}, status=status.HTTP_200_OK)
+        except Likes.DoesNotExist:
+            return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)
+
+
+class RemoveBuketAPI(APIView):
+    def delete(self, request, *args, **kwargs):
+        user_id = request.GET.get("user_id")
+        item_id = request.GET.get("item_id")
+
+        try:
+            buket = Buket.objects.get(user_id=user_id, item_id=item_id)
+            buket.delete()
             return Response({"success": True}, status=status.HTTP_200_OK)
         except Likes.DoesNotExist:
             return Response({"success": False}, status=status.HTTP_404_NOT_FOUND)

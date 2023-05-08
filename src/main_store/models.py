@@ -51,9 +51,8 @@ class PromoCode(models.Model):
 
 class Orders(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)
-    status = models.CharField(max_length=255, null=True, blank=True)
-    number = models.IntegerField()
-    promo_code = models.ForeignKey(PromoCode, on_delete=models.DO_NOTHING)
+    status = models.CharField(max_length=255, null=True, blank=True, default="Active")
+    promo_code = models.ForeignKey(PromoCode, null=True, blank=True, on_delete=models.DO_NOTHING, default=None)
     sum_of_order = models.FloatField()
 
 
@@ -75,6 +74,7 @@ class Review(models.Model):
 class OrederData(models.Model):
     item = models.ForeignKey(Items, on_delete=models.CASCADE)
     order = models.ForeignKey(Orders, on_delete=models.CASCADE)
+    count = models.IntegerField()
 
 
 class Color(models.Model):

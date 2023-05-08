@@ -95,7 +95,7 @@ class BuketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Buket
-        fields = ["id", "user", "item"]
+        fields = ["id", "user", "item", "count"]
 
     def get_picture(self, obj):
         return obj.item.pictures.first().picture

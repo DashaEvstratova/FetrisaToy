@@ -31,8 +31,9 @@ from main_store.views import (
     UpdateBucketItemAPI,
     CheckLikeItemAPI,
     RemoveLikeAPI,
+    RemoveBuketAPI,
+    create_order,
 )
-
 
 router = SimpleRouter()
 router.register(r"items", ItemViewSet, basename="items")
@@ -53,4 +54,6 @@ urlpatterns = [
     path("check-like-item/", CheckLikeItemAPI.as_view(), name="check_like_item"),
     path("update-bucket-item/", UpdateBucketItemAPI.as_view(), name="update-bucket-item"),
     path("remove-like-item/", RemoveLikeAPI.as_view(), name="remove-like-item"),
+    path("remove-bucket-item/", RemoveBuketAPI.as_view(), name="remove-bucket-item"),
+    path("create-order/", create_order, name="create-order"),
 ] + router.urls
