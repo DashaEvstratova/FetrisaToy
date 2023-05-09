@@ -35,7 +35,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     house = models.IntegerField(null=True, blank=True)
     corps = models.CharField(max_length=255, null=True, blank=True)
     apartment = models.CharField(max_length=255, null=True, blank=True)
-    phone_number = models.IntegerField(unique=True, null=True, blank=True)
+    phone_number = models.CharField(max_length=12, unique=True, null=True, blank=True)
     date_of_birth = models.DateField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=False)
 

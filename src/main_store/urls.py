@@ -33,6 +33,7 @@ from main_store.views import (
     RemoveLikeAPI,
     RemoveBuketAPI,
     create_order,
+    UserUpdateAPIView,
 )
 
 router = SimpleRouter()
@@ -40,6 +41,7 @@ router.register(r"items", ItemViewSet, basename="items")
 router.register(r"pattern", PatternViewSet, basename="pattern")
 
 urlpatterns = [
+    path("users/<int:pk>/update/", UserUpdateAPIView.as_view(), name="user-update"),
     path("auth/register/", RegistrationView.as_view(), name="register"),
     path("auth/token/", JWTTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("auth/token/refresh/", JWTTokenObtainPairView.as_view(), name="token_refresh"),

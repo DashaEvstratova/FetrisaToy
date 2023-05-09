@@ -2,6 +2,7 @@
 import {MDBBtn, MDBIcon, MDBInput} from "mdb-vue-ui-kit";
 import ProfilBar from "@/components/ProfilBar.vue";
 import FooterMain from "@/components/FooterMain.vue";
+import axios from "axios";
 // import axios from "axios";
 
 export default {
@@ -50,10 +51,26 @@ export default {
         }
     },
     methods: {
-        handleAvatarClick() {
+        async updateUserParameter(parameter, value) {
+            const userId = this.user.id
+            const apiUrl = `http://127.0.0.1:8000/users/${userId}/update/`;
+            const requestData = {
+                parameter: parameter,
+                value: value
+            };
+
+            axios.put(apiUrl, requestData)
+                .then(response => {
+                    console.log(response.data); // Обработка успешного ответа от сервера
+                })
+                .catch(error => {
+                    console.error(error); // Обработка ошибок
+                });
+        },
+        async handleAvatarClick() {
             this.$refs.fileInput.click();
         },
-        handleFileChange(event) {
+        async handleFileChange(event) {
             const file = event.target.files[0];
             const reader = new FileReader();
 
@@ -143,28 +160,31 @@ export default {
     <div class="center-cont">
     <div class="input-container">
         <label for="name">Email:</label>
-        <b-form-input v-model="email" type="email" placeholder="Введите ваш email"></b-form-input>
+        <b-form-input v-model="email" type="email" placeholder="Введите ваш email" disabled="True"></b-form-input>
     </div>
     </div>
     <br>
     <div class="center-cont">
     <div class="input-container">
         <label for="name">Имя:</label>
-        <b-form-input v-model="name" placeholder="Введите ваше имя"></b-form-input>
+        <b-form-input v-model="name" placeholder="Введите ваше имя"
+                      @input="updateUserParameter('name', name)"></b-form-input>
     </div>
     </div>
     <br>
      <div class="center-cont">
     <div class="input-container">
         <label for="name">Фамилия:</label>
-        <b-form-input v-model="surname" placeholder="Введите вашу фамилию"></b-form-input>
+        <b-form-input v-model="surname" placeholder="Введите вашу фамилию"
+                      @input="updateUserParameter('surname', surname)"></b-form-input>
     </div>
     </div>
     <br>
     <div class="center-cont">
         <div class="input-container">
             <label for="name">Отчество:</label>
-            <b-form-input v-model="patronymic" placeholder="Введите ваше отчество"></b-form-input>
+            <b-form-input v-model="patronymic" placeholder="Введите ваше отчество"
+                          @input="updateUserParameter('patronymic', patronymic)"></b-form-input>
         </div>
     </div>
     <br>
@@ -172,14 +192,16 @@ export default {
     <div class="center-cont">
         <div class="input-container">
             <label for="name"> Номер телефона:</label>
-            <b-form-input v-model="phone_number" placeholder="Введите номер телефона"></b-form-input>
+            <b-form-input v-model="phone_number" placeholder="Введите номер телефона"
+                          @input="updateUserParameter('phone_number', phone_number)"></b-form-input>
         </div>
     </div>
     <br>
     <div class="center-cont">
         <div class="input-container">
             <label for="name"> Дата рождения:</label>
-            <b-form-input v-model="data_of_birthday" type='date'></b-form-input>
+            <b-form-input v-model="data_of_birthday" type='date'
+                          @input="updateUserParameter('data_of_birthday', data_of_birthday)"></b-form-input>
         </div>
     </div>
     <br>
@@ -187,35 +209,40 @@ export default {
     <div class="center-cont">
         <div class="input-container">
             <label for="name">Город:</label>
-            <b-form-input v-model="city" placeholder="Введите город доставки"></b-form-input>
+            <b-form-input v-model="city" placeholder="Введите город доставки"
+                          @input="updateUserParameter('city', city)"></b-form-input>
         </div>
     </div>
     <br>
     <div class="center-cont">
         <div class="input-container">
             <label for="name">Улица:</label>
-            <b-form-input v-model="street" placeholder="Введите улицу доставки"></b-form-input>
+            <b-form-input v-model="street" placeholder="Введите улицу доставки"
+                          @input="updateUserParameter('street', street)"></b-form-input>
         </div>
     </div>
     <br>
     <div class="center-cont">
         <div class="input-container">
             <label for="name">Дом:</label>
-            <b-form-input v-model="house" placeholder="Введите номер дом"></b-form-input>
+            <b-form-input v-model="house" placeholder="Введите номер дом"
+                          @input="updateUserParameter('house', house)"></b-form-input>
         </div>
     </div>
     <br>
     <div class="center-cont">
         <div class="input-container">
             <label for="name">Корпус (если есть):</label>
-            <b-form-input v-model="corps" placeholder="Введите номер корпуса"></b-form-input>
+            <b-form-input v-model="corps" placeholder="Введите номер корпуса"
+                          @input="updateUserParameter('corps', corps)"></b-form-input>
         </div>
     </div>
     <br>
     <div class="center-cont">
         <div class="input-container">
             <label for="name"> Квартира:</label>
-            <b-form-input v-model="apartment" placeholder="Введите номер квартиры"></b-form-input>
+            <b-form-input v-model="apartment" placeholder="Введите номер квартиры"
+                          @input="updateUserParameter('apartment', apartment)"></b-form-input>
         </div>
     </div>
     <br>

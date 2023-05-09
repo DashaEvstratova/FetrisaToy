@@ -25,6 +25,29 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 
 
+class UserUpdateAPIView(APIView):
+    def put(self, request, pk):
+        # Получаем данные из запроса
+        parameter = request.data.get("parameter")
+        value = request.data.get("value")
+
+        # Проверяем, что параметр и значение переданы
+        if not parameter or not value:
+            return Response({"error": "Необходимо указать параметр и значение."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Находим пользователя по его идентификатору
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "Пользователь не найден."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Обновляем соответствующее поле
+        setattr(user, parameter, value)
+        user.save()
+
+        return Response({"message": "Параметр успешно обновлен."}, status=status.HTTP_200_OK)
+
+
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
