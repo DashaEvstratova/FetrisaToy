@@ -8,7 +8,7 @@
          <b-icon icon="person-fill" aria-hidden="true"></b-icon>
            {{user.email}}
             <br>
-      <b-dropdown-item-button>Профиль</b-dropdown-item-button>
+      <b-dropdown-item-button @click="goToProfilePage">Профиль</b-dropdown-item-button>
       <b-dropdown-divider></b-dropdown-divider>
       <b-dropdown-item-button variant="danger" @click="logout">
         Выйти
@@ -38,10 +38,13 @@ export default {
         }
     },
     methods: {
-        logout() {
+        async logout() {
             // удаляем данные пользователя
             localStorage.removeItem('user');
             location.reload();
+        },
+        async goToProfilePage() {
+            this.$router.push('/profile');
         }
     }
 }

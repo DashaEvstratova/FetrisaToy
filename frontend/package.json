@@ -21,6 +21,7 @@
     "vue-google-oauth2": "^1.5.10",
     "vue-google-signin-button": "^1.0.4",
     "vue-jwt-decode": "^0.1.0",
+    "vue-upload-component": "^2.8.23",
     "vuelidate": "^0.7.7",
     "vuex": "^4.1.0"
   },

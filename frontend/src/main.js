@@ -8,11 +8,12 @@ import ItemPage from "@/pages/ItemPage.vue"
 import LikePage from "@/pages/LikePage.vue";
 import BuketPage from '@/pages/BuketPage.vue'
 import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
+import PayPage from "@/pages/PayPage.vue";
+import ProfilePage from "@/pages/ProfilePage.vue";
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import PayPage from "@/pages/PayPage.vue";
 
 const routeInfos = [
     {
@@ -43,6 +44,10 @@ const routeInfos = [
     {
         path:'/pay',
         component: PayPage
+    },
+    {
+        path:'/profile',
+        component: ProfilePage
     }
 ]
 
