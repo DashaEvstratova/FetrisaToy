@@ -34,6 +34,7 @@ from main_store.views import (
     RemoveBuketAPI,
     create_order,
     UserUpdateAPIView,
+    upload_file,
 )
 
 router = SimpleRouter()
@@ -41,6 +42,7 @@ router.register(r"items", ItemViewSet, basename="items")
 router.register(r"pattern", PatternViewSet, basename="pattern")
 
 urlpatterns = [
+    path("upload/", upload_file, name="upload_file"),
     path("users/<int:pk>/update/", UserUpdateAPIView.as_view(), name="user-update"),
     path("auth/register/", RegistrationView.as_view(), name="register"),
     path("auth/token/", JWTTokenObtainPairView.as_view(), name="token_obtain_pair"),

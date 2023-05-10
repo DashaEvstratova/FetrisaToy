@@ -21,7 +21,7 @@ export default {
             corps:'',
             apartment:'',
             phone_number:'',
-            data_of_birthday:'',
+            date_of_birth:'',
             avatar:''
         }
     },
@@ -42,7 +42,7 @@ export default {
                     this.corps = user.corps;
                     this.apartment = user.apartment;
                     this.phone_number = user.phone_number;
-                    this.data_of_birthday = user.data_of_birthday;
+                    this.date_of_birth = user.date_of_birth;
                     this.avatar = user.avatar
                 })
                 .catch(error => {
@@ -78,9 +78,26 @@ export default {
                 // Преобразование содержимого файла в base64-кодировку
                 const base64Data = reader.result;
                 this.avatar = base64Data;
+
+                // Отправка файла на сервер
+                this.uploadFile(file);
             };
 
             reader.readAsDataURL(file);
+        },
+        async uploadFile(file) {
+            // Создание экземпляра FormData для отправки файла на сервер
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('user', JSON.stringify(this.user.id));
+
+            try {
+                // Отправка файла на сервер с помощью Axios или другой библиотеки
+                const response = await axios.post('http://127.0.0.1:8000/upload/', formData);
+                console.log(response.data); // Обработка успешного ответа от сервера
+            } catch (error) {
+                console.error(error); // Обработка ошибок
+            }
         },
         async getUserById(id) {
             const response = await fetch(`http://127.0.0.1:8000/users/`);
@@ -149,7 +166,7 @@ export default {
     <div class="center-container">
         <div class="mb-2">
             <div class="avatar-container" @click="handleAvatarClick">
-                <b-avatar size="10rem" :src="avatar"></b-avatar>
+                <b-avatar size="10rem" :src="require(`../assets/done-removebg-preview.png`)"></b-avatar>
                 <input type="file" ref="fileInput" style="display: none" @change="handleFileChange">
             </div>
         </div>
@@ -200,8 +217,8 @@ export default {
     <div class="center-cont">
         <div class="input-container">
             <label for="name"> Дата рождения:</label>
-            <b-form-input v-model="data_of_birthday" type='date'
-                          @input="updateUserParameter('data_of_birthday', data_of_birthday)"></b-form-input>
+            <b-form-input v-model="date_of_birth" type='date'
+                          @input="updateUserParameter('date_of_birth', date_of_birth)"></b-form-input>
         </div>
     </div>
     <br>

@@ -23,6 +23,23 @@ from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.http import HttpResponse
+
+
+@csrf_exempt
+def upload_file(request):
+    if request.method == "POST":
+        file = request.FILES["file"]
+        user_data = request.POST.get("user")  # Получение данных о пользователе
+        pk = json.loads(user_data)
+        user = User.objects.get(pk=pk)
+        setattr(user, "avatar", file)
+        user.save()
+        # Сохранение файла на сервере
+        with open(f"frontend/src/assets/{file}", "wb") as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+        return HttpResponse("Файл успешно загружен")
 
 
 class UserUpdateAPIView(APIView):
