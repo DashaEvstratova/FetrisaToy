@@ -166,7 +166,7 @@ export default {
     <div class="center-container">
         <div class="mb-2">
             <div class="avatar-container" @click="handleAvatarClick">
-                <b-avatar size="10rem" :src="require(`../assets/done-removebg-preview.png`)"></b-avatar>
+                <b-avatar size="10rem" :src="avatar"></b-avatar>
                 <input type="file" ref="fileInput" style="display: none" @change="handleFileChange">
             </div>
         </div>

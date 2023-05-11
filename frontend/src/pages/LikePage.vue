@@ -107,7 +107,7 @@ export default {
                         <b-card v-for="item in likes" :key="item.item.id"
                                 :to="`/item/${item.item.id}`"
                                 @click="$router.push(`/item/${item.item.id}`)"
-                                :img-src="require(`../assets/${item.item.pictures[0].picture}`)"
+                                :img-src="`${item.item.pictures[0].picture}`"
                                 :title="item.item.name"
                                 img-alt="Изображение"
                                 img-top

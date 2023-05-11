@@ -35,10 +35,6 @@ def upload_file(request):
         user = User.objects.get(pk=pk)
         setattr(user, "avatar", file)
         user.save()
-        # Сохранение файла на сервере
-        with open(f"frontend/src/assets/{file}", "wb") as destination:
-            for chunk in file.chunks():
-                destination.write(chunk)
         return HttpResponse("Файл успешно загружен")
 
 

@@ -183,7 +183,7 @@ export default {
                     <div class="row no-gutters">
                         <div class="col-md-4">
                             <img
-                                :src="require(`../assets/${item.item.pictures[0].picture}`)"
+                                :src="`${item.item.pictures[0].picture}`"
                                 @click="$router.push(`/item/${item.item.id}`)"
                                 class="card-img"
                                 alt="Упс"
@@ -216,7 +216,7 @@ export default {
                                     <h3>Итого: {{ summ }} ₽</h3>
                                 </div>
                                 <br>
-                                <button @click="ToPay" type="submit" class="btn btn-default">Перейти к оформлению
+                                <button v-if='user' @click="ToPay" type="submit" class="btn btn-default">Перейти к оформлению
                                 </button>
                             </div>
                         </div>

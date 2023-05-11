@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.urls import path
 from rest_framework.routers import SimpleRouter
+from django.conf import settings
+from django.conf.urls.static import static
 from main_store.views import (
     ItemViewSet,
     PatternViewSet,
@@ -41,23 +43,28 @@ router = SimpleRouter()
 router.register(r"items", ItemViewSet, basename="items")
 router.register(r"pattern", PatternViewSet, basename="pattern")
 
-urlpatterns = [
-    path("upload/", upload_file, name="upload_file"),
-    path("users/<int:pk>/update/", UserUpdateAPIView.as_view(), name="user-update"),
-    path("auth/register/", RegistrationView.as_view(), name="register"),
-    path("auth/token/", JWTTokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("auth/token/refresh/", JWTTokenObtainPairView.as_view(), name="token_refresh"),
-    path("users/", UserList.as_view(), name="user_list"),
-    path("users/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
-    path("items/<int:id>/", AllItemViewSet.as_view(), name="item-detail"),
-    path("bucket/create/", bucket_create_view, name="bucket_create"),
-    path("bucket/user/<int:user_id>/", BuketList.as_view(), name="buket-user-list"),
-    path("like/create/", like_create_view, name="like_create"),
-    path("like/user/<int:user_id>/", LikeList.as_view(), name="like-user-list"),
-    path("check-bucket-item/", CheckBucketItemAPI.as_view(), name="check_bucket_item"),
-    path("check-like-item/", CheckLikeItemAPI.as_view(), name="check_like_item"),
-    path("update-bucket-item/", UpdateBucketItemAPI.as_view(), name="update-bucket-item"),
-    path("remove-like-item/", RemoveLikeAPI.as_view(), name="remove-like-item"),
-    path("remove-bucket-item/", RemoveBuketAPI.as_view(), name="remove-bucket-item"),
-    path("create-order/", create_order, name="create-order"),
-] + router.urls
+urlpatterns = (
+    [
+        path("upload/", upload_file, name="upload_file"),
+        path("users/<int:pk>/update/", UserUpdateAPIView.as_view(), name="user-update"),
+        path("auth/register/", RegistrationView.as_view(), name="register"),
+        path("auth/token/", JWTTokenObtainPairView.as_view(), name="token_obtain_pair"),
+        path("auth/token/refresh/", JWTTokenObtainPairView.as_view(), name="token_refresh"),
+        path("users/", UserList.as_view(), name="user_list"),
+        path("users/<int:pk>/", UserDetailView.as_view(), name="user-detail"),
+        path("items/<int:id>/", AllItemViewSet.as_view(), name="item-detail"),
+        path("bucket/create/", bucket_create_view, name="bucket_create"),
+        path("bucket/user/<int:user_id>/", BuketList.as_view(), name="buket-user-list"),
+        path("like/create/", like_create_view, name="like_create"),
+        path("like/user/<int:user_id>/", LikeList.as_view(), name="like-user-list"),
+        path("check-bucket-item/", CheckBucketItemAPI.as_view(), name="check_bucket_item"),
+        path("check-like-item/", CheckLikeItemAPI.as_view(), name="check_like_item"),
+        path("update-bucket-item/", UpdateBucketItemAPI.as_view(), name="update-bucket-item"),
+        path("remove-like-item/", RemoveLikeAPI.as_view(), name="remove-like-item"),
+        path("remove-bucket-item/", RemoveBuketAPI.as_view(), name="remove-bucket-item"),
+        path("create-order/", create_order, name="create-order"),
+    ]
+    + router.urls
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+)

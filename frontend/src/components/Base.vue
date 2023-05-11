@@ -10,7 +10,7 @@
                         <b-card v-for="pattern in patterns" :key="pattern"
                                 :to="`/item/${pattern.item.id}`"
                                 @click="$router.push(`/item/${pattern.item.id}`)"
-                                :img-src="require(`../assets/${pattern.picture}`)"
+                                :img-src="`${pattern.picture}`"
                                 :title="pattern.item.name"
                                 img-alt="Изображение"
                                 img-top
@@ -34,7 +34,7 @@
                         <b-card v-for="item in items" :key="item.item.id"
                                 :to="`/item/${item.item.id}`"
                                 @click="$router.push(`/item/${item.item.id}`)"
-                                :img-src="require(`../assets/${item.picture}`)"
+                                :img-src="`${item.picture}`"
                                 :title="item.item.name"
                                 img-alt="Изображение"
                                 img-top

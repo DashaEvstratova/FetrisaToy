@@ -242,7 +242,7 @@ export default {
             <table>
                 <tr>
                     <td>
-                        <img :src="require(`../assets/9.jpg`)" alt="Product Image" class="product-image">
+                        <img :src="`${item.picture}`" alt="Product Image" class="product-image" width="450" height="450">
                     </td>
                     <td>
                         <div class="text" style="width: 650px;">
