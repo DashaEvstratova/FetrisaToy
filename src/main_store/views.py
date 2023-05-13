@@ -1,4 +1,4 @@
-from django.views import View
+from django.utils.decorators import method_decorator
 from main_store.serializers import (
     ItemSerializer,
     PicturesSerializer,
@@ -8,22 +8,83 @@ from main_store.serializers import (
     LikeCreateSerializer,
     LikeSerializer,
 )
+from email.mime.text import MIMEText
 from main_store.models import Items, Pictures, User, Buket, Likes, Orders, OrederData
 from rest_framework.viewsets import ModelViewSet
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework import generics
 from djoser.serializers import UserCreateSerializer
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views import View
 import json
-from django.http import HttpResponse
+import jwt
+from django.conf import settings
+from django.core.mail import send_mail
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class ResetPasswordView(View):
+    def post(self, request):
+        email = list(request.POST.keys())
+
+        # Проверка наличия пользователя с указанным email
+        try:
+            user = User.objects.get(email=email[0])
+        except User.DoesNotExist:
+            return JsonResponse({"message": "User not found"}, status=404)
+
+        # Генерация JWT-токена
+        payload = {"email": email[0]}
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+
+        # Сохранение токена сброса пароля в модели пользователя
+        user.reset_token = token
+        user.save()
+
+        # Формирование ссылки для сброса пароля
+        reset_url = f"http://localhost:8080/reset-password/{token}"
+
+        # Отправка письма со ссылкой на сброс пароля
+        subject = "Сброс пароля"
+        message = f"Нажмите на ссылку ниже:\n\n{reset_url}"
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email[0]])
+
+        return JsonResponse({"message": "Email sent"})
+
+
+@csrf_exempt
+def reset_password_api(request):
+    if request.method == "POST":
+        token = request.data.get("token")
+        password = request.data.get("password")
+        print(token)
+        print(password)
+
+        # Здесь вы можете выполнить логику проверки токена сброса пароля и получить пользователя
+
+        try:
+            user = User.objects.get(reset_token=token)
+        except User.DoesNotExist:
+            return JsonResponse({"error": "Недействительный токен сброса пароля."}, status=400)
+
+        # Изменяем пароль пользователя
+        user.password = make_password(password)
+        user.reset_token = None  # Опционально: очищаем поле с токеном сброса пароля
+        user.save()
+
+        # Пример успешного ответа
+        response = {"message": "Пароль успешно сброшен."}
+        return JsonResponse(response)
+
+    # Если метод запроса не POST, возвращаем ошибку
+    return JsonResponse({"error": "Метод запроса не разрешен."}, status=405)
 
 
 @csrf_exempt

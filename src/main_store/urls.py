@@ -37,6 +37,8 @@ from main_store.views import (
     create_order,
     UserUpdateAPIView,
     upload_file,
+    ResetPasswordView,
+    reset_password_api,
 )
 
 router = SimpleRouter()
@@ -45,6 +47,8 @@ router.register(r"pattern", PatternViewSet, basename="pattern")
 
 urlpatterns = (
     [
+        path("reset-password-api", reset_password_api, name="reset_password_api"),
+        path("reset-password/", ResetPasswordView.as_view(), name="reset_password"),
         path("upload/", upload_file, name="upload_file"),
         path("users/<int:pk>/update/", UserUpdateAPIView.as_view(), name="user-update"),
         path("auth/register/", RegistrationView.as_view(), name="register"),

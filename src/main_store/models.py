@@ -42,6 +42,7 @@ class User(BaseModel, AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=12, unique=True, null=True, blank=True)
     date_of_birth = models.DateField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=False)
+    reset_token = models.CharField(max_length=255, blank=True, null=True)
 
     @property
     def is_staff(self):

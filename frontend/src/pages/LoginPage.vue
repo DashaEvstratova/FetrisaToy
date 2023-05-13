@@ -55,6 +55,8 @@ export default {
                 <div class="container signin">
                     <p>У вас нет аккаунта?<router-link to="/auth">Зарегестрироваться</router-link>
   <router-view/>.</p>
+                    <router-link to="/forget-password">Забыли пароль?</router-link>
+  <router-view/>
                 </div>
             </form>
         </div>

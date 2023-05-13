@@ -10,10 +10,12 @@ import BuketPage from '@/pages/BuketPage.vue'
 import {BootstrapVue, BootstrapVueIcons} from "bootstrap-vue";
 import PayPage from "@/pages/PayPage.vue";
 import ProfilePage from "@/pages/ProfilePage.vue";
+import ResetPasswordPage from "@/pages/ResetPasswordPage.vue";
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import ForgetPasswordPage from "@/pages/ForgetPasswordPage.vue";
 
 const routeInfos = [
     {
@@ -48,6 +50,14 @@ const routeInfos = [
     {
         path:'/profile',
         component: ProfilePage
+    },
+    {
+        path: '/forget-password',
+        component: ForgetPasswordPage
+    },
+    {
+        path: '/reset-password/:token',
+        component: ResetPasswordPage
     }
 ]
 
