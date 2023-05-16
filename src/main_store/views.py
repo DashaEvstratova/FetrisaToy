@@ -1,4 +1,6 @@
 from django.utils.decorators import method_decorator
+from django.contrib.auth.hashers import make_password
+
 from main_store.serializers import (
     ItemSerializer,
     PicturesSerializer,
@@ -8,7 +10,6 @@ from main_store.serializers import (
     LikeCreateSerializer,
     LikeSerializer,
 )
-from email.mime.text import MIMEText
 from main_store.models import Items, Pictures, User, Buket, Likes, Orders, OrederData
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import status, generics
@@ -60,15 +61,9 @@ class ResetPasswordView(View):
 
 
 @csrf_exempt
-def reset_password_api(request):
+def reset_password_api(request, token):
     if request.method == "POST":
-        token = request.data.get("token")
-        password = request.data.get("password")
-        print(token)
-        print(password)
-
-        # Здесь вы можете выполнить логику проверки токена сброса пароля и получить пользователя
-
+        password = list(request.POST.keys())[0]
         try:
             user = User.objects.get(reset_token=token)
         except User.DoesNotExist:

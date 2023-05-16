@@ -33,9 +33,11 @@ export default {
         .post('http://127.0.0.1:8000/reset-password/', this.email)
         .then(response => {
           alert(response.data.message);
+          this.$router.push('/login');
           // дополнительные действия после успешной отправки письма о сбросе пароля
         })
         .catch(error => {
+            alert("Такая почта не зарегестрирована");
           console.error(error);
         });
     }

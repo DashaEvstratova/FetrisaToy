@@ -40,13 +40,10 @@ export default {
         return;
       }
       const token = this.$route.params.token;
-       const formData = new FormData();
-            formData.append('token', token);
-            formData.append('password', this.password);
 
         try {
-            await axios.post(`http://127.0.0.1:8000/reset-password-api/`,
-                formData);
+            await axios.post(`http://127.0.0.1:8000/reset-password-api/${token}`,
+                this.password);
             this.$router.push('/menu');
         } catch (error) {
             alert('Произошла ошибка');

@@ -47,7 +47,7 @@ router.register(r"pattern", PatternViewSet, basename="pattern")
 
 urlpatterns = (
     [
-        path("reset-password-api", reset_password_api, name="reset_password_api"),
+        path("reset-password-api/<str:token>", reset_password_api, name="reset_password_api"),
         path("reset-password/", ResetPasswordView.as_view(), name="reset_password"),
         path("upload/", upload_file, name="upload_file"),
         path("users/<int:pk>/update/", UserUpdateAPIView.as_view(), name="user-update"),
