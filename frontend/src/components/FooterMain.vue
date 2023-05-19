@@ -44,13 +44,13 @@
             <!-- Links -->
             <h6 class="text-uppercase fw-bold mb-4">Покупателям</h6>
             <p>
-              <a href="#!" class="text-reset">Доставка</a>
+              <a href="/delivery" class="text-reset">Доставка</a>
             </p>
             <p>
-              <a href="#!" class="text-reset">Способ оплаты</a>
+              <a href="/payinfo" class="text-reset">Способ оплаты</a>
             </p>
             <p>
-              <a href="#!" class="text-reset">Вопросы и ответы</a>
+              <a href="/questions_and_answers" class="text-reset">Вопросы и ответы</a>
             </p>
           </MDBCol>
           <MDBCol md="3" lg="2" xl="2" class="mx-auto mb-4">
