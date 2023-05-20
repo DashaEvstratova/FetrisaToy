@@ -69,8 +69,8 @@ class LikeCreateSerializer(serializers.Serializer):
         item_id = validated_data["item"]
         user = User.objects.get(id=user_id)
         item = Items.objects.get(id=item_id)
-        bucket = Likes.objects.create(user=user, item=item)
-        return bucket
+        likes = Likes.objects.create(user=user, item=item)
+        return likes
 
 
 class PictureBuketSerializer(serializers.ModelSerializer):
