@@ -2,7 +2,6 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.hashers import make_password
 
 from main_store.serializers import (
-    ItemSerializer,
     PicturesSerializer,
     UserSerializer,
     BucketCreateSerializer,
@@ -115,14 +114,6 @@ class UserUpdateAPIView(APIView):
         user.save()
 
         return Response({"message": "Параметр успешно обновлен."}, status=status.HTTP_200_OK)
-
-
-class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
 
 
 @csrf_exempt
