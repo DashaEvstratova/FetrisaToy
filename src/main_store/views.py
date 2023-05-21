@@ -27,6 +27,7 @@ import json
 import jwt
 from django.conf import settings
 from django.core.mail import send_mail
+from drf_yasg.utils import swagger_auto_schema
 
 
 @method_decorator(csrf_exempt, name="dispatch")

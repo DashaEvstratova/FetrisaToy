@@ -14,9 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
+from rest_framework import permissions
 from rest_framework.routers import SimpleRouter
 from django.conf import settings
 from django.conf.urls.static import static
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
 from main_store.views import (
     ItemViewSet,
     PatternViewSet,
@@ -41,12 +45,27 @@ from main_store.views import (
     reset_password_api,
 )
 
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="API Documentation",
+        default_version="v1",
+        description="API documentation for your project",
+        terms_of_service="https://www.example.com/terms/",
+        contact=openapi.Contact(email="contact@example.com"),
+        license=openapi.License(name="MIT License"),
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+
 router = SimpleRouter()
 router.register(r"items", ItemViewSet, basename="items")
 router.register(r"pattern", PatternViewSet, basename="pattern")
 
 urlpatterns = (
     [
+        path("docs/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
         path("reset-password-api/<str:token>", reset_password_api, name="reset_password_api"),
         path("reset-password/", ResetPasswordView.as_view(), name="reset_password"),
         path("upload/", upload_file, name="upload_file"),
