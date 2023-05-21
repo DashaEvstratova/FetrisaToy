@@ -4,7 +4,7 @@ import ProfilBar from "@/components/ProfilBar.vue";
 import FooterMain from "@/components/FooterMain.vue";
 
 export default {
-    name: "BuketPage",
+    name: "QuestionsAndAnswersPage",
     components: {FooterMain, MDBInput, MDBBtn, MDBIcon, ProfilBar},
     data() {
         return {

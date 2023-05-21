@@ -15,6 +15,9 @@ import ForgetPasswordPage from "@/pages/ForgetPasswordPage.vue";
 import DeliveryPage from "@/pages/DeliveryPage.vue";
 import PayInfoPage from "@/pages/PayInfoPage.vue";
 import QuestionsAndAnswersPage from "@/pages/QuestionsAndAnswersPage.vue";
+import RequisitesPage from "@/pages/RequisitesPage.vue";
+import AboutUsPage from "@/pages/AboutUsPage.vue";
+import ContactsPage from "@/pages/ContactsPage.vue";
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
@@ -68,13 +71,25 @@ const routeInfos = [
         component: ResetPasswordPage
     },
     {
-        path: '/payinfo',
+        path: '/pay_info',
         component: PayInfoPage
     },
     {
         path: '/questions_and_answers',
         component: QuestionsAndAnswersPage
     },
+    {
+        path: '/requisites',
+        component: RequisitesPage
+    },
+    {
+        path: '/about_us',
+        component: AboutUsPage
+    },
+    {
+        path:'/contacts',
+        component: ContactsPage
+    }
 ]
 
 const router = createRouter({
