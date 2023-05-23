@@ -114,6 +114,13 @@ export default {
         async redirectToMenu() {
             this.$router.push('/menu');
         },
+      async resetpassword(){
+          axios
+        .post('http://127.0.0.1:8000/reset-password/', this.email)
+        .then(response => {
+          alert(response.data.message);
+        })
+      }
     }
 }
 </script>
@@ -262,8 +269,8 @@ export default {
                           @input="updateUserParameter('apartment', apartment)"></b-form-input>
         </div>
     </div>
-    <br>
-    <a href="">Сбросить пароль</a>
+  <br>
+  <button @click="resetpassword()">Сбросить пароль</button>
     <br>
     <br>
     <FooterMain/>
