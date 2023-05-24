@@ -18,6 +18,7 @@ import QuestionsAndAnswersPage from "@/pages/QuestionsAndAnswersPage.vue";
 import RequisitesPage from "@/pages/RequisitesPage.vue";
 import AboutUsPage from "@/pages/AboutUsPage.vue";
 import ContactsPage from "@/pages/ContactsPage.vue";
+import NotificationsPage from "@/pages/NotificationsPage.vue"
 
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
@@ -89,7 +90,13 @@ const routeInfos = [
     {
         path:'/contacts',
         component: ContactsPage
-    }
+    },
+    {
+        path: '/notifications',
+        component: NotificationsPage,
+        meta: {unauthorizedAccess: true}
+
+    },
 ]
 
 const router = createRouter({
