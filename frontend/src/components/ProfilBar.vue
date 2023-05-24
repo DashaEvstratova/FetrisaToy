@@ -10,6 +10,8 @@
             <br>
       <b-dropdown-item-button @click="goToProfilePage">Профиль</b-dropdown-item-button>
       <b-dropdown-divider></b-dropdown-divider>
+          <b-dropdown-item-button @click="goToChatPage">Чатик</b-dropdown-item-button>
+      <b-dropdown-divider></b-dropdown-divider>
       <b-dropdown-item-button variant="danger" @click="logout">
         Выйти
       </b-dropdown-item-button>
@@ -45,6 +47,9 @@ export default {
         },
         async goToProfilePage() {
             this.$router.push('/profile');
+        },
+        async goToChatPage(){
+          this.$router.push('/notifications');
         }
     }
 }
