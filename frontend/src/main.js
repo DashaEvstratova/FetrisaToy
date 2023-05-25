@@ -23,6 +23,7 @@ import NotificationsPage from "@/pages/NotificationsPage.vue"
 // Import Bootstrap and BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import LoginGitHubPage from "@/pages/LoginGitHubPage.vue";
 
 
 const routeInfos = [
@@ -96,6 +97,10 @@ const routeInfos = [
         component: NotificationsPage,
         meta: {unauthorizedAccess: true}
 
+    },
+    {
+        path: '/login_github',
+        component: LoginGitHubPage,
     },
 ]
 

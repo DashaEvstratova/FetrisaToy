@@ -24,7 +24,10 @@ export default {
             } catch (error) {
                 console.log(error.response.data)
             }
-        }
+        },
+      async loginGitHub() {
+        window.location.href = 'https://github.com/login/oauth/authorize?client_id=5aa9200784e50c52a705&redirect_uri=http://localhost:8080/login_github/&scope=user:email';
+      }
     }
 }
 </script>
@@ -55,6 +58,9 @@ export default {
                 <div class="container signin">
                     <p>У вас нет аккаунта?<router-link to="/auth">Зарегестрироваться</router-link>
   <router-view/>.</p>
+                  <button @click="loginGitHub">Войти через GitHub</button>
+                  <br>
+                  <br>
                     <router-link to="/forget-password">Забыли пароль?</router-link>
   <router-view/>
                 </div>

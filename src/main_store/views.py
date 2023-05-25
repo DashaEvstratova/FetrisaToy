@@ -25,8 +25,33 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views import View
 import json
 import jwt
+import requests
 from django.conf import settings
 from django.core.mail import send_mail
+
+
+@api_view(["POST"])
+def login_git_hub(request):
+    if request.method == "POST":
+        code = list(request.POST.keys())
+        data = {
+            "client_id": "5aa9200784e50c52a705",
+            "client_secret": "472ba4f62a44d2707e6580f44a5a2677ccd234d1",
+            "code": code,
+            "redirect_uri": "http://localhost:8080/login_github/",
+        }
+        headers = {"Accept": "application/json"}
+        response = requests.post("https://github.com/login/oauth/access_token", data=data, headers=headers)
+        access_token = response.json()["access_token"]
+        headers = {"Authorization": f"Bearer {access_token}"}
+        userResponse = requests.get("https://api.github.com/user", headers=headers)
+        email = userResponse.json()["email"]
+        if email is None:
+            login = userResponse.json()["login"]
+            email = f"{login}@mail.ru"
+        password = userResponse.json()["node_id"]
+        return JsonResponse({"email": email, "password": password})
+    return JsonResponse({"email": "error"})
 
 
 @method_decorator(csrf_exempt, name="dispatch")

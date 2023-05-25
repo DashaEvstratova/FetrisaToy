@@ -43,6 +43,7 @@ from main_store.views import (
     upload_file,
     ResetPasswordView,
     reset_password_api,
+    login_git_hub,
 )
 
 
@@ -65,6 +66,7 @@ router.register(r"pattern", PatternViewSet, basename="pattern")
 
 urlpatterns = (
     [
+        path("auth_git_hub/", login_git_hub),
         path("docs/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
         path("reset-password-api/<str:token>", reset_password_api, name="reset_password_api"),
         path("reset-password/", ResetPasswordView.as_view(), name="reset_password"),
